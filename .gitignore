@@ -1,0 +1,83 @@
+.env
+.env.*
+*.key
+*.pem
+secrets/
+.venv/
+__pycache__/
+*.py[cod]
+
+# 2026-10-26: Exclude Node dependencies and local verification caches.
+node_modules/
+.cache/
+
+# Local configuration and credentials; keep only the empty setup template.
+.env*
+*.env
+*.env.*
+secrets/
+credentials/
+.private/
+.local/
+.ssh/
+.aws/
+.azure/
+.docker/
+.npmrc
+*.p12
+*.pfx
+*.jks
+*.keystore
+proxy-token
+registry-credentials*
+api-keys.*
+credentials*.json
+
+# Installed environments, dependencies, caches and generated build artifacts.
+.venv*/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.npm/
+.pnpm-store/
+build/
+dist/
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+
+# Local logs, editor files, exported runs, raw inputs and backup copies.
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+run-exports/
+data/raw/
+data/private/
+meteo_precipitations_*.csv
+smoke_test - Copie.py
+smoke_test - Copy.py
+
+# Safe to version: no actual credentials. Keep this exception after .env rules.
+!.env.example
+
+# History: 2026-10-27: Excluded local secrets, installed artifacts and backups while retaining the empty credential template and versioned snapshots.
+
+# Reproducible optional runtime; fetched separately, never uploaded with the project.
+/vendor/
+# History: 2026-10-27: Excluded the local vendor runtime at the owner's request; retain provenance and installation instructions.
+
+# Optional raw archive is reproducible; URL and checksum remain in docs/data-sources.md.
+/data/meteo/Q_44_previous-1950-2024_RR-T-Vent.csv.gz
+# History: 2026-10-28: Excluded the unused raw weather archive without deleting local data; retained recovery provenance.

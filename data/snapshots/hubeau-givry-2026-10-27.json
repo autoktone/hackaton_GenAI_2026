@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "dataKind": "captured_real",
+  "capturedOn": "2026-10-27",
+  "source": "Zetaris SQL captures of Hub Eau hydrometry and owner-supplied Meteo-France CSV",
+  "provenanceReport": "docs/validation/reports/0015-hubeau-sql-discovery.md",
+  "upstreamUrls": [
+    "https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr",
+    "https://hubeau.eaufrance.fr/api/v2/hydrometrie/obs_elab"
+  ],
+  "limitations": [
+    "Partial SQL samples, not a complete source export.",
+    "Station metadata and observations were read by separate statements; this is not an atomic snapshot.",
+    "The one history row has no verified match to Givry.",
+    "Weather replay contains only five SQL-captured BLAIN rows from the 5490-row 2024 source; rainfall units require source confirmation."
+  ],
+  "views": {
+    "flood_analysis.v_hydro_stations": {
+      "rows": [
+        [
+          "K400001010",
+          "K4000010",
+          "La Loire \u00e0 Cours-les-Barres - Givry",
+          "La Loire \u00e0 Cours-les-Barres",
+          "COURS-LES-BARRES",
+          "CHER",
+          "la Loire",
+          "true",
+          "47.01599577",
+          "3.07211312",
+          "1964-01-01T00:00:00Z",
+          null,
+          "3",
+          null,
+          null
+        ]
+      ]
+    },
+    "flood_analysis.v_hydro_observations": {
+      "rows": [
+        [
+          "K400001010",
+          "K4000010",
+          "2026-10-27T17:50:00Z",
+          "H",
+          "-1460.0",
+          "-1.46",
+          "m",
+          "Non qualifi\u00e9e",
+          "Brute"
+        ],
+        [
+          "K400001010",
+          "K4000010",
+          "2026-10-27T17:50:00Z",
+          "Q",
+          "50600.0",
+          "50.6",
+          "m3/s",
+          "Non qualifi\u00e9e",
+          "Brute"
+        ],
+        [
+          "K400001010",
+          "K4000010",
+          "2026-10-27T17:55:00Z",
+          "H",
+          "-1460.0",
+          "-1.46",
+          "m",
+          "Non qualifi\u00e9e",
+          "Brute"
+        ],
+        [
+          "K400001010",
+          "K4000010",
+          "2026-10-27T17:55:00Z",
+          "Q",
+          "50600.0",
+          "50.6",
+          "m3/s",
+          "Non qualifi\u00e9e",
+          "Brute"
+        ],
+        [
+          "K400001010",
+          "K4000010",
+          "2026-10-27T18:00:00Z",
+          "H",
+          "-1460.0",
+          "-1.46",
+          "m",
+          "Non qualifi\u00e9e",
+          "Brute"
+        ],
+        [
+          "K400001010",
+          "K4000010",
+          "2026-10-27T18:00:00Z",
+          "Q",
+          "50600.0",
+          "50.6",
+          "m3/s",
+          "Non qualifi\u00e9e",
+          "Brute"
+        ]
+      ]
+    },
+    "flood_analysis.v_hydro_history": {
+      "rows": [
+        [
+          "F128000101",
+          "F1280001",
+          "2024-01-01",
+          "QmnJ",
+          "0.0",
+          "0.0",
+          "Donn\u00e9e brute"
+        ]
+      ]
+    },
+    "flood_hydro.meteo_precipitations_raw": {
+      "rows": [
+        [
+          "44015001",
+          "BLAIN",
+          "47.472833",
+          "-1.771667",
+          "20240101",
+          "37.6",
+          "1"
+        ],
+        [
+          "44015001",
+          "BLAIN",
+          "47.472833",
+          "-1.771667",
+          "20240102",
+          "19.9",
+          "1"
+        ],
+        [
+          "44015001",
+          "BLAIN",
+          "47.472833",
+          "-1.771667",
+          "20240103",
+          "5.2",
+          "1"
+        ],
+        [
+          "44015001",
+          "BLAIN",
+          "47.472833",
+          "-1.771667",
+          "20240104",
+          "4.0",
+          "1"
+        ],
+        [
+          "44015001",
+          "BLAIN",
+          "47.472833",
+          "-1.771667",
+          "20240105",
+          "0.6",
+          "1"
+        ]
+      ]
+    }
+  },
+  "changeHistory": [
+    "2026-10-27: Preserved captured Unicode source labels after correcting the text-transfer encoding.",
+    "2026-10-27: Added five actual weather rows for source-contract replay; no Python weather analysis."
+  ],
+  "licensing": {
+    "reviewedOn": "2026-10-28",
+    "creditsDocument": "docs/data-sources.md",
+    "hydrometry": "Etalab Open Licence, as stated by Hub Eau terms; attribution retained.",
+    "weather": "Meteo-France; Open Licence 2.0 (official dataset metadata lov2).",
+    "termsUrl": "https://hubeau.eaufrance.fr/page/conditions-generales",
+    "weatherDatasetUrl": "https://www.data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes"
+  },
+  "history": [
+    "2026-10-28: Added verified dataset licensing and attribution references; observation rows unchanged."
+  ]
+}

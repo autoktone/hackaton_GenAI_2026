@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "workflowId": "flood-analysis",
+  "version": "1.1.0",
+  "executionPolicy": {
+    "pinDefinitionOnRunCreation": true,
+    "requireExplicitResumeAfterRestart": true,
+    "allowPartialCompletion": false,
+    "allowAutomaticRetries": false,
+    "maxCollectionAttempts": 2
+  },
+  "tracePolicy": {
+    "agent": "tracer",
+    "requiredForEveryAcceptedTransition": true,
+    "recordRejectedCommands": true,
+    "requireRecordedIntentBeforeDispatch": true,
+    "blockNormalClosureOnMissingEvidence": true,
+    "checkpoints": [
+      "run-created",
+      "planning-decision",
+      "task-started",
+      "attempt-finished",
+      "operational-change",
+      "blocker-opened",
+      "blocker-resolved",
+      "approval-requested",
+      "approval-decided",
+      "run-resumed",
+      "task-finished",
+      "trace-review",
+      "finalization-requested",
+      "finalization-published"
+    ]
+  },
+  "steps": [
+    {
+      "id": "check-data",
+      "agent": "planner",
+      "dependsOn": [],
+      "successCriteria": [
+        "weather-data-plan-recorded",
+        "hydro-data-plan-recorded"
+      ]
+    },
+    {
+      "id": "weather",
+      "agent": "weather",
+      "dependsOn": [
+        "check-data"
+      ],
+      "allowedActions": [
+        "reuse-valid-data",
+        "collect-required-intervals",
+        "wait-for-shared-collection"
+      ],
+      "successCriteria": [
+        "required-coverage-usable",
+        "dataset-versions-recorded"
+      ]
+    },
+    {
+      "id": "hydro",
+      "agent": "hydro",
+      "dependsOn": [
+        "check-data"
+      ],
+      "allowedActions": [
+        "reuse-valid-data",
+        "collect-required-intervals",
+        "wait-for-shared-collection"
+      ],
+      "successCriteria": [
+        "required-coverage-usable",
+        "dataset-versions-recorded"
+      ]
+    },
+    {
+      "id": "analyze",
+      "agent": "analyzer",
+      "dependsOn": [
+        "weather",
+        "hydro"
+      ],
+      "successCriteria": [
+        "input-versions-recorded",
+        "method-version-recorded",
+        "assumptions-and-limitations-recorded",
+        "analysis-result-referenced"
+      ]
+    },
+    {
+      "id": "report",
+      "agent": "reporter",
+      "dependsOn": [
+        "analyze"
+      ],
+      "successCriteria": [
+        "report-artifact-referenced",
+        "supporting-evidence-referenced",
+        "simulation-limitations-disclosed"
+      ]
+    }
+  ],
+  "incidentPolicies": {
+    "network-error": {
+      "action": "open-blocker",
+      "blockerKind": "technical",
+      "automaticRetry": false
+    },
+    "approval-required": {
+      "action": "open-blocker",
+      "blockerKind": "human-approval",
+      "scope": "exact-run-task-operation-and-action"
+    },
+    "required-data-unavailable": {
+      "action": "open-blocker",
+      "blockerKind": "data"
+    },
+    "uncertain-operation-outcome": {
+      "action": "require-reconciliation-before-retry"
+    },
+    "missing-required-evidence": {
+      "action": "open-blocker",
+      "blockerKind": "traceability"
+    }
+  },
+  "terminationPolicy": {
+    "completedWhen": "required-steps-completed-and-finalization-published",
+    "failedWhen": "required-work-definitively-failed-and-finalization-published",
+    "cancelledWhen": "cancellation-settled-and-finalization-published",
+    "partialCompletionAllowed": false,
+    "requireTerminalTraceSummary": true
+  },
+  "finalizationPolicy": {
+    "id": "finalize-run",
+    "agent": "orchestrator",
+    "traceAgent": "tracer",
+    "phase": "FINALIZING",
+    "triggers": [
+      "required-steps-completed",
+      "required-work-definitively-failed",
+      "cancellation-requested"
+    ],
+    "actions": [
+      "stop-new-dispatches",
+      "reconcile-outstanding-operations",
+      "review-terminal-evidence",
+      "publish-finalization"
+    ],
+    "requiresBusinessReport": false,
+    "blockOnUncertainOperations": true,
+    "requireStableFinalizationIdentity": true,
+    "requireCompleteTraceForCompleted": true,
+    "allowIncompleteTraceFor": [
+      "FAILED",
+      "CANCELLED"
+    ],
+    "requireExplicitMissingEvidence": true,
+    "requireDurablePublication": true
+  }
+}

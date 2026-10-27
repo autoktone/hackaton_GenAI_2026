@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "workflowId": "flood-analysis",
+  "version": "1.3.0",
+  "executionPolicy": {
+    "pinDefinitionOnRunCreation": true,
+    "requireExplicitResumeAfterRestart": true,
+    "allowPartialCompletion": false,
+    "allowAutomaticRetries": true,
+    "maxCollectionAttempts": 2,
+    "automaticRetryScope": "validated-read-only-zetaris-select"
+  },
+  "tracePolicy": {
+    "agent": "tracer",
+    "requiredForEveryAcceptedTransition": true,
+    "recordRejectedCommands": true,
+    "requireRecordedIntentBeforeDispatch": true,
+    "blockNormalClosureOnMissingEvidence": true,
+    "checkpoints": [
+      "run-created",
+      "planning-decision",
+      "task-started",
+      "attempt-finished",
+      "operational-change",
+      "blocker-opened",
+      "blocker-resolved",
+      "approval-requested",
+      "approval-decided",
+      "run-resumed",
+      "task-finished",
+      "trace-review",
+      "finalization-requested",
+      "finalization-published",
+      "sql-attempt-failed",
+      "sql-retry-scheduled",
+      "human-intervention-required"
+    ]
+  },
+  "steps": [
+    {
+      "id": "qualify-request",
+      "agent": "planner",
+      "dependsOn": [],
+      "successCriteria": [
+        "request-scope-recorded",
+        "authorized-source-catalog-recorded",
+        "execution-profile-and-limits-recorded"
+      ]
+    },
+    {
+      "id": "analyze",
+      "agent": "analyzer",
+      "dependsOn": [
+        "qualify-request"
+      ],
+      "successCriteria": [
+        "input-versions-recorded",
+        "method-version-recorded",
+        "required-tool-results-resolved",
+        "nightshift-analysis-result-referenced",
+        "assumptions-and-limitations-recorded"
+      ]
+    },
+    {
+      "id": "report",
+      "agent": "reporter",
+      "dependsOn": [
+        "analyze"
+      ],
+      "successCriteria": [
+        "report-artifact-referenced",
+        "supporting-evidence-referenced",
+        "data-and-generation-profiles-disclosed"
+      ]
+    }
+  ],
+  "incidentPolicies": {
+    "network-error": {
+      "action": "retry-once-then-request-human",
+      "blockerKind": "technical",
+      "automaticRetry": true,
+      "maxAttempts": 2,
+      "scope": "validated-read-only-zetaris-select",
+      "backoffSeconds": 0.25,
+      "retryableErrors": [
+        "ZETARIS_TRANSIENT_HTTP_ERROR",
+        "ZETARIS_OUTCOME_UNKNOWN"
+      ]
+    },
+    "approval-required": {
+      "action": "open-blocker",
+      "blockerKind": "human-approval",
+      "scope": "exact-run-task-operation-and-action"
+    },
+    "required-data-unavailable": {
+      "action": "open-blocker",
+      "blockerKind": "data"
+    },
+    "uncertain-operation-outcome": {
+      "action": "require-reconciliation-before-retry",
+      "readOnlySelectException": "one-explicitly-authorized-second-read-with-separate-attempt-evidence",
+      "noExactlyOnceClaim": true
+    },
+    "missing-required-evidence": {
+      "action": "open-blocker",
+      "blockerKind": "traceability"
+    },
+    "retry-exhausted": {
+      "action": "suspend-and-request-human",
+      "scope": "exact-run-task-operation",
+      "additionalInference": false,
+      "automaticResume": false
+    }
+  },
+  "terminationPolicy": {
+    "completedWhen": "required-steps-completed-and-finalization-published",
+    "failedWhen": "required-work-definitively-failed-and-finalization-published",
+    "cancelledWhen": "cancellation-settled-and-finalization-published",
+    "partialCompletionAllowed": false,
+    "requireTerminalTraceSummary": true
+  },
+  "finalizationPolicy": {
+    "id": "finalize-run",
+    "agent": "orchestrator",
+    "traceAgent": "tracer",
+    "phase": "FINALIZING",
+    "triggers": [
+      "required-steps-completed",
+      "required-work-definitively-failed",
+      "cancellation-requested"
+    ],
+    "actions": [
+      "stop-new-dispatches",
+      "reconcile-outstanding-operations",
+      "review-terminal-evidence",
+      "publish-finalization"
+    ],
+    "requiresBusinessReport": false,
+    "blockOnUncertainOperations": true,
+    "requireStableFinalizationIdentity": true,
+    "requireCompleteTraceForCompleted": true,
+    "allowIncompleteTraceFor": [
+      "FAILED",
+      "CANCELLED"
+    ],
+    "requireExplicitMissingEvidence": true,
+    "requireDurablePublication": true
+  },
+  "dataOperationPolicy": {
+    "trigger": "authorized-analyzer-data-request",
+    "dispatchOwner": "orchestrator",
+    "allowedAgents": [
+      "weather",
+      "hydro"
+    ],
+    "requireValidityEvaluation": true,
+    "preferValidDataReuse": true,
+    "requireCorrelatedResult": true,
+    "allowUnrequestedCollection": false,
+    "maxAttempts": 2,
+    "emptyRowsAreTransportFailure": false
+  }
+}

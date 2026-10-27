@@ -1,0 +1,257 @@
+{
+  "repository_url": "https://github.com/Meterless/Meterless",
+  "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+  "tree_api_url": "https://api.github.com/repos/Meterless/Meterless/git/trees/1742dec56a66e58eef9dda2d2b865823758ca8cd?recursive=1",
+  "license": "Apache-2.0",
+  "scope": "Selected upstream references; not a complete repository copy.",
+  "purpose": "Documentation and source review; not an installed integration.",
+  "verification": "Git blob SHA-1 matched against the pinned GitHub tree.",
+  "limitations": [
+    "Verification uses GitHub as the source of both content and metadata.",
+    "AGENTS.md is renamed to agents-spec.md; its bytes are unchanged.",
+    "Original relative links are unchanged and may reference omitted files.",
+    "Referenced files and tests have not been executed by this operation."
+  ],
+  "files": [
+    {
+      "original_path": "engines/world-model/AGENTS.md",
+      "local_path": "upstream/agents-spec.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/AGENTS.md",
+      "git_blob_sha1": "4224c9c4ddcbb3d381ace6e41befc1790f1c7206",
+      "sha256": "42597ab7f75fdddf9244282c9cabe889c5def83f4bb1c0739832db341adbbed7",
+      "bytes": 33260,
+      "retrieved_at": "2026-10-26T03:56:22.071615+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/README.md",
+      "local_path": "upstream/README.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/README.md",
+      "git_blob_sha1": "3494b07d990d8f38cf78d5dfbddb7b197773bd79",
+      "sha256": "23f8f12f06d3727fb4e922c7eb081fa4d5bd3f97e9ada76c3d1e83fc47782438",
+      "bytes": 13019,
+      "retrieved_at": "2026-10-26T03:56:22.442066+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/LICENSE",
+      "local_path": "upstream/LICENSE",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/LICENSE",
+      "git_blob_sha1": "d1a6bb88af6e6b79738dd192fb491a99eb2a7fe3",
+      "sha256": "63e29fc8231b53757a77fbc371071c91d768621efa1e68b1d9ff8d1bb7c4a0ef",
+      "bytes": 11339,
+      "retrieved_at": "2026-10-26T03:56:22.754175+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/docs/architecture.md",
+      "local_path": "upstream/docs/architecture.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/docs/architecture.md",
+      "git_blob_sha1": "57f8ed86d8174fb10b0c27320ce4200a47e074fc",
+      "sha256": "b398cc53a98e3df3c643e305d912bcfac8077c250bb489e0af82629bf5fb35d2",
+      "bytes": 5048,
+      "retrieved_at": "2026-10-26T03:56:23.140953+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/docs/aggregate-shapes.md",
+      "local_path": "upstream/docs/aggregate-shapes.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/docs/aggregate-shapes.md",
+      "git_blob_sha1": "cd6afdaea88382433cb0292ba8c0f8ce2e41e13a",
+      "sha256": "ce14514a1eaeb567e37ff929f972d6385422801b260ab7c93ac6aee65d2da4f5",
+      "bytes": 3317,
+      "retrieved_at": "2026-10-26T03:56:23.450168+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/docs/entity-context-relationship-model.md",
+      "local_path": "upstream/docs/entity-context-relationship-model.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/docs/entity-context-relationship-model.md",
+      "git_blob_sha1": "700427b69c679a9d1174fe3957f7abfc0adc67e8",
+      "sha256": "892fb106f2f0cf59578c75f58b34f4a0c3a60aba8aa904191acf16bc29c83e92",
+      "bytes": 4167,
+      "retrieved_at": "2026-10-26T03:56:23.750720+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/docs/ingest-pipeline.md",
+      "local_path": "upstream/docs/ingest-pipeline.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/docs/ingest-pipeline.md",
+      "git_blob_sha1": "2c8766fa703ecae768d5c45e4ee64b92887cf29e",
+      "sha256": "d9478a70fb06819379d862b12af496ed7c857d8b4a6a760a0c021adf85609850",
+      "bytes": 4948,
+      "retrieved_at": "2026-10-26T03:56:24.057234+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/docs/stable-ids.md",
+      "local_path": "upstream/docs/stable-ids.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/docs/stable-ids.md",
+      "git_blob_sha1": "3ed4521640d658902907030413da13840e47f51f",
+      "sha256": "45ac1683ec28b6b0d1f52baec6e6e545bc4b48d71381c70ffd3637322b59e13d",
+      "bytes": 3922,
+      "retrieved_at": "2026-10-26T03:56:24.352227+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/docs/concurrency-and-queues.md",
+      "local_path": "upstream/docs/concurrency-and-queues.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/docs/concurrency-and-queues.md",
+      "git_blob_sha1": "485d3120ab6b94b8200da6332d7b95b1d7018eb6",
+      "sha256": "d0d853be7af9e4095d24299abb7ce6bbf48b646981f2155ce07bc7a97b146857",
+      "bytes": 4039,
+      "retrieved_at": "2026-10-26T03:56:24.648465+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/docs/read-surface.md",
+      "local_path": "upstream/docs/read-surface.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/docs/read-surface.md",
+      "git_blob_sha1": "893d73e10d2d63e6eb2ec1355e370e3a9cd8249b",
+      "sha256": "44ecbe4bf5ef2b1c0ab01e4528a3ac127fa0b5ea3e044675713799a6e52c3bb7",
+      "bytes": 3733,
+      "retrieved_at": "2026-10-26T03:56:24.948058+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/conformance/README.md",
+      "local_path": "upstream/conformance/README.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/conformance/README.md",
+      "git_blob_sha1": "05e300a945560ffb22f9895c8795d8ee0c23c2fe",
+      "sha256": "23e3cdcf3eab2967e9a7a671feb938d73834303ae0e8c25db915d039b1e012d2",
+      "bytes": 1138,
+      "retrieved_at": "2026-10-26T03:56:25.277642+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/conformance/runner.ts",
+      "local_path": "upstream/conformance/runner.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/conformance/runner.ts",
+      "git_blob_sha1": "d4e26f7901b8d5b51cc586b32d2d1aaf2a628ee3",
+      "sha256": "7cd3b80d62d45d16f3342c62a91c89abf819c9b46970187d2f36fb9e3050da82",
+      "bytes": 7794,
+      "retrieved_at": "2026-10-26T03:56:25.601233+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/README.md",
+      "local_path": "upstream/reference/README.md",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/README.md",
+      "git_blob_sha1": "c7badc57b5af1e0b01d3f362a4e57f6707031453",
+      "sha256": "da891f94d28b5900d4ec87a412782b61be2401931670334546cae1974f3004fb",
+      "bytes": 2633,
+      "retrieved_at": "2026-10-26T03:56:25.901922+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/package.json",
+      "local_path": "upstream/reference/package.json",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/package.json",
+      "git_blob_sha1": "fa66ea683aeab7570a7ae86a0052acb7da4c6a4e",
+      "sha256": "22b0a13e94e2d43759a3b1aa09e592e3266c6d43c5d2c506c4944ed9313f3276",
+      "bytes": 715,
+      "retrieved_at": "2026-10-26T03:56:26.244875+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/package-lock.json",
+      "local_path": "upstream/reference/package-lock.json",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/package-lock.json",
+      "git_blob_sha1": "f707fca8afed5c48c692566317656efbbd746f5a",
+      "sha256": "3972ac5cc31655380784f9ad52791ab8b74d5a9875601cf6415573ee1cd378c2",
+      "bytes": 81107,
+      "retrieved_at": "2026-10-26T03:56:26.625844+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/tsconfig.json",
+      "local_path": "upstream/reference/tsconfig.json",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/tsconfig.json",
+      "git_blob_sha1": "e128372a3493722fbefcfd9866b381c8e6ae8321",
+      "sha256": "dc5d553c157c5425f4cf70970d7910be3774bfc1a5e8c33e4edae5b17407ecb0",
+      "bytes": 307,
+      "retrieved_at": "2026-10-26T03:56:26.912210+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/src/index.ts",
+      "local_path": "upstream/reference/src/index.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/src/index.ts",
+      "git_blob_sha1": "ce5d69410f5bbbbff43a512f82be69a4fdc9fe77",
+      "sha256": "6e543a0be45fca9ff323fdb1a8bcd73e64ebf2b443c4b7a623cd70da33ec205d",
+      "bytes": 19785,
+      "retrieved_at": "2026-10-26T03:56:27.254926+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/src/types.ts",
+      "local_path": "upstream/reference/src/types.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/src/types.ts",
+      "git_blob_sha1": "dddd2861570309b1e2c6c1e0baea5c7ff81f876e",
+      "sha256": "4e31a8cf4de6d4b46b09659ada879be46ca8a97f25ee05f583eaa0010ddd1528",
+      "bytes": 8708,
+      "retrieved_at": "2026-10-26T03:56:27.577059+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/src/store.ts",
+      "local_path": "upstream/reference/src/store.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/src/store.ts",
+      "git_blob_sha1": "eb9c772a278737d6b5b453d658ae7b77091569d6",
+      "sha256": "2cfa6897003c22f1e2ac88e5ecf8347f653a25af7ca5842aa7042a1cc731d032",
+      "bytes": 6452,
+      "retrieved_at": "2026-10-26T03:56:27.895358+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/src/stableIds.ts",
+      "local_path": "upstream/reference/src/stableIds.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/src/stableIds.ts",
+      "git_blob_sha1": "ad7efafd69f841ec6e5851c6d754b0f424f5c4a8",
+      "sha256": "6dd81234f337ebdb7c00314aaf63482a47f19382b40c624bc57df8ba6bb88513",
+      "bytes": 7903,
+      "retrieved_at": "2026-10-26T03:56:28.202963+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/src/resolve.ts",
+      "local_path": "upstream/reference/src/resolve.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/src/resolve.ts",
+      "git_blob_sha1": "449cb73118c1f39ba0b8bb782c7f89d58e84e2be",
+      "sha256": "3fd81d2a53a39684adafb0b3e538b1fb3952be75b229b65cc755c70a0dd4fae4",
+      "bytes": 2262,
+      "retrieved_at": "2026-10-26T03:56:28.582898+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/src/ingest.ts",
+      "local_path": "upstream/reference/src/ingest.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/src/ingest.ts",
+      "git_blob_sha1": "7e8c5283625da1dcb010385b3ef4c8d9b85bb9a9",
+      "sha256": "b99ee2957c2c2b42288a86ce2acaae20c8052a97e2985569802140d95969dc03",
+      "bytes": 7921,
+      "retrieved_at": "2026-10-26T03:56:28.868894+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/test/smoke.test.ts",
+      "local_path": "upstream/reference/test/smoke.test.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/test/smoke.test.ts",
+      "git_blob_sha1": "1c86e88cfd322c525f1435ffdab2ee77b48056a4",
+      "sha256": "73398749d408647798849adafc76e9acd37efe50bcbd760b0c4d0d24d1bc092a",
+      "bytes": 9360,
+      "retrieved_at": "2026-10-26T03:56:29.155335+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "engines/world-model/reference/scripts/idempotency-check.ts",
+      "local_path": "upstream/reference/scripts/idempotency-check.ts",
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/engines/world-model/reference/scripts/idempotency-check.ts",
+      "git_blob_sha1": "f2305fda72b3134fa37828dcdcc415b8f95b8365",
+      "sha256": "541d6970cf9b59b246c1d17b69814cd8efbd29d4ef03c5ba775befeef62750ac",
+      "bytes": 2312,
+      "retrieved_at": "2026-10-26T03:56:29.514354+00:00",
+      "content_modified": false
+    }
+  ]
+}

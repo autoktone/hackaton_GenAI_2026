@@ -1,0 +1,96 @@
+{
+  "repository_url": "https://github.com/zetaris/getting-started",
+  "commit": "6a2fbaa47c32c9ac33f6584c64b43b146c621bed",
+  "license": "Apache-2.0",
+  "retrieval_method": "Read committed blobs from the existing local Git repository.",
+  "scope": "Selected getting-started references, not a complete repository copy.",
+  "limitations": [
+    "These are starter-repository references, not uniformly vendor-authored specifications.",
+    "AGENTS.md is renamed to agents-spec.md; its bytes are unchanged.",
+    "Relative links may reference omitted files.",
+    "Referenced scripts are not copied or executed.",
+    "No application integration or current Zetaris connectivity is verified."
+  ],
+  "files": [
+    {
+      "original_path": "AGENTS.md",
+      "local_path": "upstream/agents-spec.md",
+      "source_url": "https://github.com/zetaris/getting-started/blob/6a2fbaa47c32c9ac33f6584c64b43b146c621bed/AGENTS.md",
+      "git_blob_sha1": "0009ba4ec2cb0859da8bb92a5931a551ddd676b9",
+      "sha256": "16fb4ee26a3fb0ddb79fe1abe1cf54df9fdbb9ed1c30b18867f6001338d59352",
+      "bytes": 9650,
+      "copied_at": "2026-10-26T04:08:10.016768+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "LICENSE",
+      "local_path": "upstream/LICENSE",
+      "source_url": "https://github.com/zetaris/getting-started/blob/6a2fbaa47c32c9ac33f6584c64b43b146c621bed/LICENSE",
+      "git_blob_sha1": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357,
+      "copied_at": "2026-10-26T04:08:10.032153+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "docs/connections/codex-connection.md",
+      "local_path": "upstream/docs/connections/codex-connection.md",
+      "source_url": "https://github.com/zetaris/getting-started/blob/6a2fbaa47c32c9ac33f6584c64b43b146c621bed/docs/connections/codex-connection.md",
+      "git_blob_sha1": "1866400bb7fb6c4b474791ff24b9a50ac291b9b6",
+      "sha256": "aa8bb4e28cb8091dd22aa731cbc6fbc1440dc5d5c4f61c9a64aa35c3cadef16b",
+      "bytes": 3231,
+      "copied_at": "2026-10-26T04:08:10.041064+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "docs/connections/client-setup.md",
+      "local_path": "upstream/docs/connections/client-setup.md",
+      "source_url": "https://github.com/zetaris/getting-started/blob/6a2fbaa47c32c9ac33f6584c64b43b146c621bed/docs/connections/client-setup.md",
+      "git_blob_sha1": "209e46127132bf016d9cf86868c6da5da69f1876",
+      "sha256": "760dcc9f9d2c87fcfc4d093eea80b43b6627c70e6834449a1c747bbfaee982c3",
+      "bytes": 14620,
+      "copied_at": "2026-10-26T04:08:10.049710+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "scripts/HOWTO.md",
+      "local_path": "upstream/scripts/HOWTO.md",
+      "source_url": "https://github.com/zetaris/getting-started/blob/6a2fbaa47c32c9ac33f6584c64b43b146c621bed/scripts/HOWTO.md",
+      "git_blob_sha1": "0fce4ed56617b2945e2460c9fdac3a1273e31441",
+      "sha256": "1aed90aa14181bd4c3f4231a0928b3e3c408da78e1b29c75ca93d0f1fbcdf219",
+      "bytes": 9092,
+      "copied_at": "2026-10-26T04:08:10.059186+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "docs/guides/permissions.md",
+      "local_path": "upstream/docs/guides/permissions.md",
+      "source_url": "https://github.com/zetaris/getting-started/blob/6a2fbaa47c32c9ac33f6584c64b43b146c621bed/docs/guides/permissions.md",
+      "git_blob_sha1": "137ba61b61164a213eff8fd47d9b133fc9510e03",
+      "sha256": "c31411353238f9b6cd24833453622c76b03f79e6e483f704c1bc012f03b9e2bc",
+      "bytes": 15358,
+      "copied_at": "2026-10-26T04:08:10.068533+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "docs/guides/zetaris-lightning-sql-commands.md",
+      "local_path": "upstream/docs/guides/zetaris-lightning-sql-commands.md",
+      "source_url": "https://github.com/zetaris/getting-started/blob/6a2fbaa47c32c9ac33f6584c64b43b146c621bed/docs/guides/zetaris-lightning-sql-commands.md",
+      "git_blob_sha1": "6e110b28432ddb7c17bf50ceddd8d711b4585380",
+      "sha256": "43b5dfa251351fff6ad2499ebe48cc617c5bbb4fddb5dc0b49750cbc66208c6d",
+      "bytes": 71300,
+      "copied_at": "2026-10-26T04:08:10.077934+00:00",
+      "content_modified": false
+    },
+    {
+      "original_path": "docs/guides/zetaris-lightning-sql-companion.md",
+      "local_path": "upstream/docs/guides/zetaris-lightning-sql-companion.md",
+      "source_url": "https://github.com/zetaris/getting-started/blob/6a2fbaa47c32c9ac33f6584c64b43b146c621bed/docs/guides/zetaris-lightning-sql-companion.md",
+      "git_blob_sha1": "3793d8793f68d5de3ea021b35f95429346de8f61",
+      "sha256": "8356384c814e9d98647caf1a688c2a6bf968690fb84f5aff8cd8c82877b68056",
+      "bytes": 24215,
+      "copied_at": "2026-10-26T04:08:10.086450+00:00",
+      "content_modified": false
+    }
+  ]
+}

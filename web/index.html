@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flood Risk Decision Intelligence</title>
+<style>
+:root{--ink:#173041;--muted:#5c7081;--line:#dce5eb;--blue:#176f99;--teal:#087f77;--amber:#8b5d12;--red:#a6343d;--bg:#f2f6f8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}header{background:#102c40;color:white;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px}h1{font-size:21px;margin:0;letter-spacing:-.4px}header small{color:#aec5d3}.brand{display:flex;gap:13px;align-items:center}.logo{width:34px;height:42px}.pill{display:inline-block;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:650;background:#e7f1f7;color:#16577a}.pill.live{background:#dcf4e9;color:#13604b}.pill.warn{background:#fff1d7;color:var(--amber)}.pill.fail{background:#fde6e8;color:var(--red)}main{max-width:1450px;margin:auto;padding:26px 28px}.intro{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:20px}.intro h2{font-size:27px;line-height:1.2;margin:0 0 8px;letter-spacing:-.6px}.muted{color:var(--muted)}.small{font-size:12px}.grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:22px}.panel{background:white;border:1px solid var(--line);border-radius:13px;padding:22px;box-shadow:0 3px 15px #17304104;margin-bottom:18px}.panel h3{margin:0 0 14px;font-size:16px}.side .panel{padding:19px}label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:0 0 6px;text-transform:uppercase;letter-spacing:.65px}select,textarea{width:100%;background:white;border:1px solid #bdced9;border-radius:8px;color:var(--ink);font:14px/1.5 inherit;padding:10px;margin-bottom:16px}textarea{min-height:170px;resize:vertical;font-family:inherit}textarea[readonly]{background:#f5f8fa}button{border:0;border-radius:8px;padding:12px 16px;background:var(--blue);color:white;font:600 14px system-ui;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.full{width:100%}.secondary{background:#eaf1f5;color:var(--ink);padding:8px 12px;font-size:12px}.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}.fact{padding:17px;background:white;border:1px solid var(--line);border-radius:11px}.fact .value{font-size:24px;font-weight:750;line-height:1.2}.fact .label{font-size:11px;color:var(--muted);margin-top:7px;text-transform:uppercase;letter-spacing:.6px}.source{border-left:3px solid #7cb8ce;padding-left:12px;margin:16px 0}.source strong{font-size:13px}.source p{margin:3px 0;font-size:12px;color:var(--muted)}.source code{font-size:10px;overflow-wrap:anywhere}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0 8px}.node{border:1px solid var(--line);border-radius:8px;padding:12px 8px;text-align:center;font-size:12px;background:#f8fafb;transition:background .2s}.node strong{display:block}.node.active{border-color:#47a3bb;background:#eaf7fc;box-shadow:0 0 0 2px #daeff7}.node.done{border-color:#7cc4af;background:#edfaf4}.node.blocked{border-color:#ddb374;background:#fff6e6}.notice{background:#fff8e8;border:1px solid #eed9ad;border-radius:8px;padding:12px 15px;font-size:12px;color:#795321;margin:14px 0}.notice.red{background:#fff0f0;border-color:#eab3b8;color:var(--red)}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.section-head h3{margin:0}.empty{border:1px dashed #c7d7e1;border-radius:10px;padding:30px;color:var(--muted);text-align:center;background:#fbfdfe}.table-wrap{overflow:auto;margin:12px 0}table{border-collapse:collapse;width:100%;font-size:12px}th{text-align:left;background:#eef4f7;color:#36546a;font-size:11px;white-space:nowrap}td,th{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}td{white-space:nowrap}code{font:12px ui-monospace,Consolas,monospace;color:#36586e}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.55 ui-monospace,Consolas,monospace;background:#f4f7f9;border-radius:7px;padding:12px}.narrative{overflow-wrap:anywhere}.narrative h3{font-size:16px;margin:20px 0 9px}.narrative p{margin:9px 0}.narrative table td{white-space:normal;min-width:85px}.narrative .bullet{padding-left:12px}.timeline{max-height:360px;overflow:auto;margin-top:12px}.event{border-left:2px solid #cfe2eb;padding:0 0 12px 14px;margin-left:5px;position:relative}.event:before{content:"";position:absolute;left:-5px;top:6px;width:8px;height:8px;background:#5698b2;border-radius:50%}.event summary{cursor:pointer;font-size:12px;font-weight:600}.event small{display:block;font-weight:400;color:var(--muted);font-size:10px}.event pre{margin:5px 0;font-size:10px}.event.issue:before{background:#ce9137}.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.hidden{display:none!important}details.catalog{font-size:12px;margin-top:12px}.catalog pre{max-height:260px;overflow:auto;font-size:10px}footer{font-size:11px;color:var(--muted);max-width:1450px;margin:0 auto;padding:0 28px 24px}.run-id{font-size:10px;color:var(--muted);overflow-wrap:anywhere;margin-top:12px}.spinner{width:12px;height:12px;border:2px solid #b9d9e6;border-top-color:var(--blue);border-radius:50%;display:inline-block;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:1000px){.grid{grid-template-columns:280px minmax(0,1fr)}.facts{grid-template-columns:repeat(2,1fr)}}@media(max-width:760px){header,main{padding:18px}.grid{grid-template-columns:1fr}.intro{display:block}.flow{grid-template-columns:repeat(2,1fr)}header small{display:none}.intro h2{font-size:23px}}
+.analysis-result{border:2px solid #176f99;border-left:6px solid #176f99;background:#f7fbfd}.analysis-result>h3{font-size:22px;margin-bottom:12px}.result-statuses{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}.result-statuses .pill{font-size:13px}.result-question{background:#eaf1f5;color:#173041;border-radius:8px;padding:12px 14px}.analysis-result h4{font-size:17px;margin:18px 0 6px}.analysis-result .narrative{font-size:16px;line-height:1.7;color:#173041}.analysis-result #model{color:#40596c}.analysis-result #answer{min-height:54px}
+</style>
+</head>
+<body>
+<header>
+<div class="brand"><svg class="logo" viewBox="0 0 34 42" aria-hidden="true"><path fill="#69c8d5" d="M17 1C14 9 2 21 2 28a15 15 0 0 0 30 0C32 21 20 9 17 1Z"/><path d="M6 27c6-6 10 6 22-1" fill="none" stroke="white" stroke-width="2"/></svg><div><h1>Flood Risk Decision Intelligence</h1><small>Loire evidence explorer &middot; Open Agent Hackathon 2026</small></div></div>
+<div class="bar"><span id="mode" class="pill">Connecting</span><span class="small">Exploratory prototype</span></div>
+</header>
+<main>
+<div class="intro"><div><h2>Inspect the evidence. Understand the limits.</h2><div class="muted">Trace a question from orchestration to data and an explainable result.</div></div><span id="engine" class="pill">Application trace</span></div>
+<div class="facts">
+<div class="fact"><div class="value">2024</div><div class="label">Verified weather period</div></div>
+<div class="fact"><div class="value">5,490</div><div class="label">Weather source records</div></div>
+<div class="fact"><div class="value">15</div><div class="label">Weather station codes</div></div>
+<div class="fact"><div class="value">103</div><div class="label">Hydrometry reference stations</div></div>
+</div>
+<div class="grid">
+<aside class="side">
+<div class="panel">
+<h3>Start an evidence run</h3>
+<label for="scenario">Scenario</label><select id="scenario"></select>
+<label for="question">Question</label><textarea id="question" spellcheck="false"></textarea>
+<button id="run" class="full" disabled>Run scenario</button>
+<p id="modeNote" class="muted small">Loading the selected execution profile.</p>
+<div id="runId" class="run-id"></div>
+</div>
+<div class="panel">
+<h3>Authorized source catalog</h3>
+<div class="source"><strong>Meteo-France &middot; department 44</strong><p>Imported 2024 CSV. RR and QRR semantics require source confirmation.</p><code>flood_hydro.meteo_precipitations_raw</code></div>
+<div class="source"><strong>Hub'Eau &middot; hydrometry</strong><p>Stations, recent observations and daily history. Exposed coverage is limited; historical matching is unresolved.</p><code>flood_analysis.v_hydro_stations<br>flood_analysis.v_hydro_observations<br>flood_analysis.v_hydro_history</code></div>
+<details class="catalog"><summary>View schema and coverage details</summary><pre id="catalog"></pre></details>
+</div>
+</aside>
+<section>
+<div class="panel">
+<div class="section-head"><h3>Application control and agent loop</h3><span id="status" class="pill">Ready</span></div>
+<div class="flow"><div id="n-orchestrator" class="node"><strong>1 &middot; Orchestrator</strong>Qualify &amp; authorize</div><div id="n-analyzer" class="node"><strong>2 &middot; Analyzer</strong>Nightshift / Nemotron</div><div id="n-data" class="node"><strong>3 &middot; Zetaris tool</strong>Controlled SQL read</div><div id="n-report" class="node"><strong>4 &middot; Evidence</strong>Response &amp; audit</div></div>
+<div id="progress" class="muted small">No operation has been dispatched.</div>
+<div id="human" class="notice red hidden"></div>
+</div>
+<div class="panel analysis-result" aria-labelledby="analysisHeading">
+<h3 id="analysisHeading">Analysis result</h3>
+<div class="result-statuses"><span id="executionStatus" class="pill">Execution: NOT STARTED</span><span id="verification" class="pill warn">Scientific interpretation: NOT VALIDATED</span></div>
+<p class="result-question"><strong>Question</strong><br><span id="analysisQuestion">Select a scenario and start a run.</span></p>
+<h4 id="answerTitle">Conclusion pending</h4>
+<p id="model" class="muted small"></p>
+<div id="answer" class="narrative" role="status" aria-live="polite" aria-atomic="true"><p>No analysis has been run yet.</p></div>
+<div class="notice">Execution success only confirms that the selected workflow completed. It does not validate the scientific interpretation. This prototype is not an official flood warning or a scientifically validated forecast.</div>
+</div>
+<div class="panel">
+<div class="section-head"><h3>Returned data</h3><span id="returned" class="muted small">No query result yet</span></div>
+<div id="tables"><div class="empty">Run a scenario to inspect actual returned rows and source receipts.</div></div>
+<div class="notice">Source coverage and returned rows are different. A LIMIT 5 query returns a sample; it does not reduce the verified source to five records. RR units and QRR meanings are not yet confirmed.</div>
+</div>
+<div class="panel"><h3>World Model task projection</h3><div id="tasks" class="muted small">No final projection yet.</div></div>
+<div class="panel">
+<div class="section-head"><h3>Execution trace</h3><button id="download" class="secondary hidden">Download run JSON</button></div>
+<div id="counters" class="muted small">Scoped events will appear here during execution.</div>
+<div id="timeline" class="timeline"></div>
+</div>
+</section>
+</div>
+</main>
+<footer>This prototype explores observations and data availability. It is not an official flood alert or a scientifically validated forecast. It does not comprehensively model soil saturation, impermeability, catchment topography or calibrated hydrological processes.</footer>
+<script>
+"use strict";
+const byId = function(id){return document.getElementById(id);};
+let configuration=null, lastResult=null, eventCount=0, previewResults=[];
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function inline(value){return escapeHtml(value).replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/\x60([^\x60]+)\x60/g,"<code>$1</code>");}
+function narrative(text){
+  let output="", table=false, code=false;
+  String(text).split(/\r?\n/).forEach(function(line){
+    if(line.startsWith(String.fromCharCode(96,96,96))){if(table){output+="</tbody></table></div>";table=false;}output+=code?"</pre>":"<pre>";code=!code;return;}
+    if(code){output+=escapeHtml(line)+"\n";return;}
+    if(line.trim().startsWith("|")){
+      const cells=line.trim().split("|").slice(1,-1);
+      if(cells.every(function(c){return /^[\s:-]+$/.test(c);})){return;}
+      if(!table){output+='<div class="table-wrap"><table><tbody>';table=true;}
+      output+="<tr>"+cells.map(function(c){return "<td>"+inline(c.trim())+"</td>";}).join("")+"</tr>";return;
+    }
+    if(table){output+="</tbody></table></div>";table=false;}
+    if(/^#{1,4} /.test(line)){output+="<h3>"+inline(line.replace(/^#{1,4} /,""))+"</h3>";}
+    else if(line.trim()){output+='<p'+(/^[-*] /.test(line)?' class="bullet"':"")+">"+inline(line)+"</p>";}
+  });
+  if(table){output+="</tbody></table></div>";}
+  if(code){output+="</pre>";}
+  return output;
+}
+function chooseScenario(){
+  const item=configuration.scenarios.find(function(s){return s.id===byId("scenario").value;});
+  byId("question").value=item.question;
+}
+function node(name,state){byId("n-"+name).className="node"+(state?" "+state:"");}
+function appendEvent(event){
+  eventCount+=1;
+  const wrapper=document.createElement("details");
+  wrapper.className="event"+(/FAILED|RETRY|HUMAN/.test(event.eventType)?" issue":"");
+  const summary=document.createElement("summary");
+  summary.textContent=event.eventType.replace(/_/g," ");
+  const small=document.createElement("small");
+  small.textContent=event.agentId+" | "+event.recordedAt+" | attempt "+event.attemptId;
+  summary.appendChild(small);wrapper.appendChild(summary);
+  const content=document.createElement("pre");
+  content.textContent=JSON.stringify(event.payload,null,2);wrapper.appendChild(content);
+  byId("timeline").appendChild(wrapper);
+  byId("timeline").scrollTop=byId("timeline").scrollHeight;
+  byId("counters").textContent=eventCount+" application events received";
+  byId("progress").textContent=event.eventType.replace(/_/g," ");
+  if(event.eventType==="PROBE_CONTEXT_CREATED"){node("orchestrator","active");}
+  if(event.eventType==="INFERENCE_DISPATCHED"){node("orchestrator","done");node("analyzer","active");}
+  if(event.eventType==="SQL_DISPATCHED"){node("data","active");}
+  if(event.eventType==="SQL_ATTEMPT_FAILED"||event.eventType==="SQL_RETRY_SCHEDULED"){node("data","blocked");}
+  if(event.eventType==="DATA_OPERATION_COMPLETED"){node("data","done");}
+  if(event.eventType==="HUMAN_INTERVENTION_REQUIRED"){node("data","blocked");node("analyzer","blocked");}
+  if(event.eventType==="ANALYZER_RESULT_RECEIVED"){node("analyzer","done");node("report","active");}
+  if(event.eventType==="REPORT_PREPARED"){node("report","done");}
+}
+function renderTables(datasets){
+  byId("tables").innerHTML="";
+  datasets.forEach(function(dataset,index){
+    const box=document.createElement("div");
+    const label=document.createElement("p");label.className="muted small";
+    label.textContent="Result "+(index+1)+" | "+dataset.sourceKind+" | receipt "+dataset.evidenceId+(dataset.truncated?" | query limit reached":"");
+    box.appendChild(label);
+    const wrap=document.createElement("div");wrap.className="table-wrap";
+    const table=document.createElement("table"), head=document.createElement("thead"), tr=document.createElement("tr");
+    dataset.columns.forEach(function(col){const cell=document.createElement("th");cell.textContent=col;tr.appendChild(cell);});
+    head.appendChild(tr);table.appendChild(head);
+    const body=document.createElement("tbody");
+    dataset.rows.forEach(function(row){const line=document.createElement("tr");row.forEach(function(value){const cell=document.createElement("td");cell.textContent=value===null?"missing":String(value);line.appendChild(cell);});body.appendChild(line);});
+    table.appendChild(body);wrap.appendChild(table);box.appendChild(wrap);byId("tables").appendChild(box);
+  });
+  if(!datasets.length){byId("tables").textContent="No completed data result in this run.";}
+}
+function setAnalysisState(status,question,kind){
+  byId("analysisQuestion").textContent=question||"Question unavailable for this run.";
+  byId("executionStatus").textContent="Execution: "+status;
+  byId("executionStatus").className="pill"+(status==="PASSED"?" live":status==="WAITING_HUMAN"?" warn":status==="FAILED"?" fail":"");
+  byId("answerTitle").textContent=status==="RUNNING"?"Conclusion pending":status==="NOT STARTED"?"Conclusion pending":kind==="scripted"?"Scripted SAMPLE response":"Generated response - unverified";
+  byId("model").textContent=kind==="scripted"?"Scripted SAMPLE response - no live Nemotron inference.":"";
+}
+function renderResult(result){
+  lastResult=result;
+  byId("runId").textContent="Run "+result.runId;
+  const analysis=result.analysisResult||{}, datasets=analysis.datasets||[];
+  byId("status").textContent=result.status.replace(/_/g," ");
+  byId("status").className="pill"+(result.status==="PASSED"?" live":result.status==="WAITING_HUMAN"?" warn":" fail");
+  byId("progress").textContent=result.status==="PASSED"?"Run completed. Inspect the evidence and unverified interpretation below.":(result.errorCode||"Run requires attention.");
+  const counts=result.counts||{};
+  byId("counters").textContent=(counts.inferenceDispatches||0)+" provider requests | "+(counts.toolExecutions||0)+" logical SQL reads | "+(counts.sqlAttempts||0)+" SQL attempts | "+(result.worldModelUsed?(result.worldModel||{}).nativeEventCount+" native events":"World Model not executed");
+  byId("download").classList.remove("hidden");
+  const projected=(((result.worldModel||{}).state||{}).run||{}).tasks;
+  if(projected){
+    const rows=Object.values(projected).map(function(task){
+      return "<tr><td>"+escapeHtml(task.agentId)+"</td><td>"+escapeHtml(task.status)+"</td><td>"+escapeHtml(task.taskId)+"</td><td>"+Object.keys(task.attempts||{}).length+"</td></tr>";
+    }).join("");
+    byId("tasks").innerHTML='<div class="table-wrap"><table><thead><tr><th>Agent</th><th>Projected state</th><th>Task ID</th><th>SQL attempts</th></tr></thead><tbody>'+rows+"</tbody></table></div>";
+  }else{
+    byId("tasks").textContent="World Model is not executed in this portable SAMPLE profile. The application trace remains available below. Use the explicit memory profile to exercise the official engine.";
+  }
+  if(result.humanIntervention){
+    byId("human").classList.remove("hidden");
+    byId("human").textContent="Human intervention required: "+result.humanIntervention.reason+". Check the source/configuration, then explicitly start a new run. No additional model call was made for this incident. This prototype does not resume old runs.";
+  }
+  byId("returned").textContent=datasets.reduce(function(n,d){return n+d.rowCount;},0)+" rows returned across "+datasets.length+" result(s)";
+  renderTables(datasets);
+  const scripted=result.inferenceKind==="scripted"||result.demoMode==="sample";
+  setAnalysisState(result.status,result.question||byId("question").value,scripted?"scripted":"live");
+  const names=Array.from(new Set(analysis.reportedModels||[]));
+  byId("model").textContent+=(scripted?"":"Reported serving model: "+(names.join(", ")||"not established")+". ")+" Requested route: "+(analysis.requestedRoute||"not established");
+  if(analysis.answer){
+    byId("answer").innerHTML=narrative(analysis.answer);
+  }else{
+    byId("answerTitle").textContent="No final conclusion";
+    byId("answer").textContent=result.status==="WAITING_HUMAN"?
+      "No analytical conclusion was produced. The read attempts did not resolve the incident. Human intervention is required: check the source and configuration, then explicitly start a new run. This prototype does not resume interrupted runs.":
+      "No analytical conclusion was produced. The run stopped before a final response was available. Inspect the execution trace and returned data below.";
+    if(result.errorCode){const detail=document.createElement("p");detail.textContent="Incident: "+result.errorCode;byId("answer").appendChild(detail);}
+  }
+  const limitations=document.createElement("div");limitations.className="notice";
+  limitations.textContent="Domain validation: not established. JUDGE verification: "+((analysis.validation||{}).runtimeJudge||"not established")+". Backend source coverage and receipts remain separate from generated claims.";
+  byId("answer").appendChild(limitations);
+  if(analysis.uncertainties){const list=document.createElement("ul");analysis.uncertainties.forEach(function(value){const item=document.createElement("li");item.textContent=value;list.appendChild(item);});byId("answer").appendChild(list);}
+}
+async function run(){
+  byId("run").disabled=true;byId("scenario").disabled=true;byId("question").disabled=true;
+  byId("run").innerHTML='<span class="spinner"></span> Running';
+  byId("status").textContent="Running";byId("status").className="pill";
+  byId("timeline").replaceChildren();byId("human").classList.add("hidden");byId("download").classList.add("hidden");
+  setAnalysisState("RUNNING",byId("question").value,configuration.mode==="sample"?"scripted":"live");
+  byId("answer").textContent="Waiting for this run's final conclusion. Data and trace events will appear below as they arrive.";byId("tables").textContent="Waiting for authorized tool results.";
+  ["orchestrator","analyzer","data","report"].forEach(function(n){node(n,"");});
+  eventCount=0;lastResult=null;previewResults=[];
+  try{
+    const response=await fetch("/api/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({scenario:byId("scenario").value,question:byId("question").value})});
+    if(!response.ok){const error=await response.json();throw new Error(error.errorCode||"REQUEST_FAILED");}
+    const reader=response.body.getReader(), decoder=new TextDecoder();
+    let buffer="", finished=false;
+    while(true){
+      const chunk=await reader.read();buffer+=decoder.decode(chunk.value||new Uint8Array(),{stream:!chunk.done});
+      const lines=buffer.split("\n");buffer=lines.pop();
+      lines.forEach(function(line){if(!line.trim()){return;}const item=JSON.parse(line);if(item.type==="event"){appendEvent(item.event);}else if(item.type==="data"){previewResults.push(item.data);renderTables(previewResults);byId("returned").textContent=previewResults.reduce(function(n,d){return n+d.rowCount;},0)+" validated rows received so far";}else if(item.type==="result"){renderResult(item.result);finished=true;}else if(item.type==="error"){throw new Error(item.errorCode);}});
+      if(chunk.done){break;}
+    }
+    if(!finished){throw new Error("CONNECTION_ENDED_WITHOUT_RESULT");}
+  }catch(error){
+    byId("status").textContent="Needs attention";byId("status").className="pill fail";
+    setAnalysisState("FAILED",byId("question").value,configuration.mode==="sample"?"scripted":"live");
+    byId("answerTitle").textContent="No confirmed final conclusion";
+    byId("answer").textContent="The request stopped before a complete final result could be confirmed. Inspect the trace and any returned data below. No automatic UI retry was performed. Incident: "+error.message;
+    byId("progress").textContent="Request stopped: "+error.message+". No automatic UI retry was performed.";
+  }finally{
+    byId("run").disabled=false;byId("scenario").disabled=false;byId("question").disabled=false;
+    byId("run").textContent=configuration.mode==="sample"?"Run SAMPLE scenario":"Run live analysis";
+  }
+}
+byId("run").addEventListener("click",run);
+byId("scenario").addEventListener("change",chooseScenario);
+byId("download").addEventListener("click",function(){
+  if(!lastResult){return;}const blob=new Blob([JSON.stringify(lastResult,null,2)],{type:"application/json"});
+  const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download="flood-risk-"+lastResult.runId+".json";link.click();setTimeout(function(){URL.revokeObjectURL(link.href);},1000);
+});
+fetch("/api/config").then(function(response){if(!response.ok){throw new Error("CONFIGURATION_UNAVAILABLE");}return response.json();}).then(function(config){
+  configuration=config;
+  byId("mode").textContent=config.mode==="sample"?"SAMPLE - captured data, scripted inference":"LIVE - Zetaris + Nightshift";
+  byId("mode").className="pill"+(config.mode==="live"?" live":"");
+  byId("engine").textContent=config.worldModel==="memory"?"Official World Model - memory":"Portable trace - World Model not executed";
+  byId("modeNote").textContent=config.mode==="sample"?"Credential-free replay. Tool choices and responses are scripted. Incident scenarios inject explicit test failures.":"Real requests may use Runtime credits. Only admitted read-only SQL is permitted. One active run at a time.";
+  config.scenarios.forEach(function(item){const option=document.createElement("option");option.value=item.id;option.textContent=item.name;byId("scenario").appendChild(option);});
+  byId("question").readOnly=config.mode==="sample";
+  byId("catalog").textContent=JSON.stringify(config.catalog,null,2);
+  chooseScenario();byId("run").disabled=false;byId("run").textContent=config.mode==="sample"?"Run SAMPLE scenario":"Run live analysis";
+}).catch(function(error){byId("progress").textContent=error.message;byId("status").textContent="Unavailable";});
+</script>
+</body>
+</html>
+
+<!-- History: 2026-10-27: Promoted the analysis conclusion, separated execution/scientific status, and disclosed scripted and incident outcomes. -->

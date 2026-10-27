@@ -1,0 +1,139 @@
+{
+  "repository_url": "https://github.com/Meterless/Meterless",
+  "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+  "purpose": "Selected official references for provider integration; installed Runtime compatibility remains unverified.",
+  "license_notes": [
+    "Repository license retained in upstream/repository/LICENSE.",
+    "Website redistribution rights are not inferred from repository licensing."
+  ],
+  "files": [
+    {
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/README.md",
+      "resolved_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/README.md",
+      "local_path": "upstream/repository/README.md",
+      "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "git_blob_sha1": "b0b7839e313ca80d3b2f07e2d93c1f1b649a9079",
+      "sha256": "4f9cb14edca0ef93167e46a8848149bc8af038f9f70fd6fd664d0a1739432b36",
+      "bytes": 22190,
+      "retrieved_at": "2026-10-26T11:04:27.268353+00:00",
+      "content_type": "text/plain; charset=utf-8",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/llms.txt",
+      "resolved_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/llms.txt",
+      "local_path": "upstream/repository/llms.txt",
+      "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "git_blob_sha1": "ab5b582c6456f5e7b440ccb47fca85a7c614f8ba",
+      "sha256": "cdb2cc569ef474224156942b358e1b6522646ffc3f0c4aea9fa74188e7f00755",
+      "bytes": 4359,
+      "retrieved_at": "2026-10-26T11:04:27.652756+00:00",
+      "content_type": "text/plain; charset=utf-8",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/LICENSE",
+      "resolved_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/LICENSE",
+      "local_path": "upstream/repository/LICENSE",
+      "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "git_blob_sha1": "d1a6bb88af6e6b79738dd192fb491a99eb2a7fe3",
+      "sha256": "63e29fc8231b53757a77fbc371071c91d768621efa1e68b1d9ff8d1bb7c4a0ef",
+      "bytes": 11339,
+      "retrieved_at": "2026-10-26T11:04:28.202254+00:00",
+      "content_type": "text/plain; charset=utf-8",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/docs/agent-ready/add-meterless-provider.md",
+      "resolved_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/docs/agent-ready/add-meterless-provider.md",
+      "local_path": "upstream/repository/docs/agent-ready/add-meterless-provider.md",
+      "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "git_blob_sha1": "4aa18b86886ff4d3c33127d54fc87d8e1bcef690",
+      "sha256": "e2d77d8ff6bac07cf4c47043e30c3f7dde17ceccd1725f9a8643d5a9846b8f96",
+      "bytes": 3241,
+      "retrieved_at": "2026-10-26T11:04:28.560470+00:00",
+      "content_type": "text/plain; charset=utf-8",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://meterless.ai/engines.html",
+      "resolved_url": "https://meterless.ai/engines.html",
+      "local_path": "upstream/website/engines.html",
+      "commit": null,
+      "git_blob_sha1": null,
+      "sha256": "48751e998dc6af6e1aa9203f15c838a2872c7f8ae58b96084345e45fe69358d5",
+      "bytes": 119516,
+      "retrieved_at": "2026-10-26T11:04:29.526326+00:00",
+      "content_type": "text/html",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://meterless.ai/cli.html",
+      "resolved_url": "https://meterless.ai/cli.html",
+      "local_path": "upstream/website/cli.html",
+      "commit": null,
+      "git_blob_sha1": null,
+      "sha256": "fe8cdc98dd565a6e97c12c7192bd369a0bfb75481c5dc98b135ad4b4564eb0e9",
+      "bytes": 111456,
+      "retrieved_at": "2026-10-26T11:04:30.163095+00:00",
+      "content_type": "text/html",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://meterless.ai/windows.html",
+      "resolved_url": "https://meterless.ai/windows.html",
+      "local_path": "upstream/website/windows.html",
+      "commit": null,
+      "git_blob_sha1": null,
+      "sha256": "af836dee454d313eb172eca232faa18d7255efc4a606f1ba62bf30f710080cf1",
+      "bytes": 185828,
+      "retrieved_at": "2026-10-26T11:04:30.827309+00:00",
+      "content_type": "text/html",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/docs/products/nightshift/README.md",
+      "metadata_url": "https://api.github.com/repos/Meterless/Meterless/contents/docs/products/nightshift/README.md?ref=1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "local_path": "upstream/repository/docs/products/nightshift/README.md",
+      "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "git_blob_sha1": "13dfa7fb2b71677297095c89245da8f4ef95bd74",
+      "sha256": "4fe25cb4525279487fe65ac3f0f5dcd77d2c2ae0a5f048239d49183d7fdcfeab",
+      "bytes": 10895,
+      "retrieved_at": "2026-10-26T11:11:25.811692+00:00",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/docs/products/nightshift/hotspot.md",
+      "metadata_url": "https://api.github.com/repos/Meterless/Meterless/contents/docs/products/nightshift/hotspot.md?ref=1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "local_path": "upstream/repository/docs/products/nightshift/hotspot.md",
+      "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "git_blob_sha1": "5f043992f8f77e48a6b5844984c0084af66b5ef5",
+      "sha256": "c716bc56d11f6d2a57525e07f9eb42526cecdf6ccfef1afca3e33efaaeb94b5a",
+      "bytes": 3720,
+      "retrieved_at": "2026-10-26T11:11:26.157397+00:00",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/Meterless/Meterless/1742dec56a66e58eef9dda2d2b865823758ca8cd/docs/products/nightshift/editions.md",
+      "metadata_url": "https://api.github.com/repos/Meterless/Meterless/contents/docs/products/nightshift/editions.md?ref=1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "local_path": "upstream/repository/docs/products/nightshift/editions.md",
+      "commit": "1742dec56a66e58eef9dda2d2b865823758ca8cd",
+      "git_blob_sha1": "a76169c7153cf800278fa0058c03ba2efa80c47d",
+      "sha256": "167a6443da24b2014daa3739feee65c9044ee232e64a13a667fcd6d98647f8da",
+      "bytes": 7230,
+      "retrieved_at": "2026-10-26T11:11:26.519734+00:00",
+      "content_modified": false
+    },
+    {
+      "source_url": "https://meterless.ai/nightshift-getting-started.md",
+      "metadata_url": null,
+      "local_path": "upstream/website/nightshift-getting-started.md",
+      "commit": null,
+      "git_blob_sha1": null,
+      "sha256": "8b8c78e4755a2d4f9e5d699ed10076ef87c0a30539b48a0dae0559e01d839df1",
+      "bytes": 13180,
+      "retrieved_at": "2026-10-26T11:11:27.282760+00:00",
+      "content_modified": false
+    }
+  ]
+}
