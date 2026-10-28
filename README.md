@@ -403,7 +403,8 @@ launches /usr/bin/node and the prepared tsx package. On WSL, ensure npm is the
 Linux npm rather than an incompatible Windows executable:
 
 ~~~bash
-node --version
+/usr/bin/node --version
+command -v npm
 npm --version
 ~~~
 
@@ -424,6 +425,441 @@ Zetaris and Nightshift using the [participant guide](docs/Participant%20Setup%20
 and the [LIVE data setup instructions](docs/setup/live-data.md). The tested
 live transport runs from Ubuntu WSL to a Windows-hosted Nightshift Runtime.
 
+#### LIVE readiness checklist
+
+The shipped LIVE web backend currently supports **Ubuntu WSL on Windows**:
+Python runs in WSL and invokes Windows PowerShell to reach a Windows-hosted
+Nightshift Runtime. Its transport accepts only localhost, 127.0.0.1 or ::1.
+A remote Runtime hostname/IP is rejected with WINDOWS_LOOPBACK_REQUIRED,
+even when that server is reachable. Pure Linux/macOS LIVE execution requires
+a different transport implementation and is not shipped here.
+
+Before onboarding data:
+
+1. Install/start Docker Zetaris with your own platform bundle, registry access
+   and account, following the participant guide. The inspected platform was
+   Zetaris 2.4.3.1. Keep administrative setup separate from the application's
+   read-only runtime access.
+2. Install/start Nightshift on Windows and configure a working Nemotron-backed
+   route in its Console. Use its actual loopback URL/port and route. Generation
+   and structured tool calling are required; a positive JUDGE verdict is not.
+3. Ensure WSL can invoke Windows PowerShell and that the official World Model
+   prerequisites/locked dependencies above are installed. The bridge uses
+   /usr/bin/node explicitly, so a different Node available only through nvm or
+   the Windows PATH does not satisfy that path.
+4. Ensure the Zetaris API is reachable from WSL and Hub'Eau is reachable from
+   the Zetaris driver/container. These are different network contexts.
+5. Keep the checkout path short for the optional engine. Leave ports 8765/8766
+   free or choose another explicit application --port.
+
+From the Ubuntu WSL terminal:
+
+~~~bash
+python3 --version
+python3 -c "import sqlite3; print('Python SQLite: available')"
+/usr/bin/node --version
+command -v npm
+npm --version
+command -v powershell.exe
+powershell.exe -NoProfile -NonInteractive -Command "Write-Output 'WSL_INTEROP_OK'"
+~~~
+
+The tested engine toolchain was Linux Node 22.22.1 and npm 10.9.2. Install a
+suitable Linux toolchain first if /usr/bin/node/npm is missing; installed
+platform/toolchain binaries are not bundled in this repository. If npm resolves
+inside /mnt/c, select the Linux npm instead before running npm ci.
+
+Nightshift creates its private token on Windows at
+%LOCALAPPDATA%\ai.meterless.runtime\proxy-token. To check presence without
+displaying its contents, run in **Windows PowerShell**:
+
+~~~powershell
+$runtimeTokenFile = Join-Path $env:LOCALAPPDATA 'ai.meterless.runtime\proxy-token'
+Test-Path -LiteralPath $runtimeTokenFile
+~~~
+
+Expected: True, and WSL_INTEROP_OK from the earlier interop check.
+Do not copy this token into the repository or browser. The LIVE UI reads that
+Windows file server-side; MODEL_API_KEY in .env.example is for the separate
+original guide smoke, not the LIVE UI. /healthz alone does not prove valid
+authentication or tool calling; configure and check the route in the Console.
+
+#### Exact Zetaris objects and data model
+
+Create the following names exactly; the application catalog and SQL allowlist
+address them. flood_hydro is a logical Lightning database, while flood_analysis
+is a SchemaStore view container, not an additional database server.
+
+| Fully qualified object | Kind | Contents / downstream use |
+|---|---|---|
+| flood_hydro.hydro_stations | REST table | Hub'Eau station-response envelope; its data array feeds the reference view |
+| flood_hydro.hydro_observations_raw | REST table | Recent H/Q response envelope for the configured bounding box |
+| flood_hydro.hydro_history_raw | REST table | QmnJ response envelope for the bounding box and 2024 period |
+| flood_hydro.meteo_precipitations_raw | CSV filestore table | NUM_POSTE, NOM_USUEL, LAT, LON, AAAAMMJJ, RR, QRR; imported 2024 records |
+| flood_analysis.v_hydro_stations | SchemaStore view | Station/site IDs, labels, service status, coordinates, dates and influence comments |
+| flood_analysis.v_hydro_observations | SchemaStore view | code_station, code_site, date_obs, grandeur_hydro, valeur_brute, valeur_normalisee, unite_normalisee, libelle_qualification_obs, libelle_statut |
+| flood_analysis.v_hydro_history | SchemaStore view | code_station, code_site, date_obs_elab, grandeur_hydro_elab, valeur_brute, debit_m3_s, libelle_statut |
+
+The full station projection is explicit in the creation SQL below. The
+[verified schema report](docs/validation/reports/0015-hubeau-sql-discovery.md)
+and [application catalog](agent/hydro_catalog.py) provide field types and limits.
+
+The URLs and view SELECT definitions below were recovered by read-only
+inspection of the deployed metadata on 2026-10-28. SELECT LIMIT 1 succeeded
+on all four final objects that day. This supplements the older
+[live-data checklist](docs/setup/live-data.md), whose statements that the
+registration URL/view SQL had not been exported describe the earlier audit.
+No object was created or changed during this documentation inspection.
+The recipe was not executed end-to-end on a second empty Zetaris installation.
+
+#### Recreate the Hub'Eau registrations and views
+
+Use Zetaris's **SQL Workspace** with an account authorized to onboard sources.
+Run **one statement at a time**, without trailing semicolons. Inspect existing
+objects first and reuse matching definitions. Do not drop or replace resources
+merely to repeat setup. CREATE SCHEMASTORE CONTAINER has no IF NOT EXISTS in
+the tested syntax. The read-only application tool cannot run these CREATEs.
+
+~~~sql
+SHOW LIGHTNING DATABASES
+~~~
+
+If flood_hydro already exists, inspect it:
+
+~~~sql
+SHOW LIGHTNING TABLES flood_hydro
+~~~
+
+Only if absent, create the logical database:
+
+~~~sql
+CREATE LIGHTNING DATABASE flood_hydro DESCRIBE BY 'Flood risk public data'
+~~~
+
+In the UI, check the SchemaStore containers. Only if flood_analysis is absent:
+
+~~~sql
+CREATE SCHEMASTORE CONTAINER flood_analysis
+~~~
+
+<details>
+<summary>Hub'Eau: exact public requests, JSON expansion and complete view SQL</summary>
+
+**Station reference.** Public endpoint criteria: river label Loire, page size
+200, JSON. The inspected original reference exposed 103 station codes; this is
+not a guarantee of complete basin coverage or a permanent API count.
+
+~~~sql
+CREATE LIGHTNING REST TABLE hydro_stations FROM flood_hydro
+REQUEST (
+  endpoint 'https://hubeau.eaufrance.fr/api/v2/hydrometrie/referentiel/stations?libelle_cours_eau=Loire&size=200&format=json',
+  method 'GET',
+  http_encoding 'URLENCODED',
+  response_type 'JSON',
+  insecure_ssl 'false'
+)
+HEADER () BODY ()
+~~~
+
+~~~sql
+CREATE SCHEMASTORE VIEW v_hydro_stations WITH CONTAINER flood_analysis AS
+SELECT
+    station.code_station,
+    station.code_site,
+    station.libelle_station,
+    station.libelle_site,
+    station.libelle_commune,
+    station.libelle_departement,
+    station.libelle_cours_eau,
+    station.en_service,
+    station.latitude_station,
+    station.longitude_station,
+    station.date_ouverture_station,
+    station.date_fermeture_station,
+    station.influence_locale_station,
+    station.commentaire_influence_locale_station,
+    station.commentaire_station
+FROM flood_hydro.hydro_stations
+LATERAL VIEW explode(data) stations AS station
+~~~
+
+**Recent observations.** Public endpoint criteria: bbox
+-2.5,46.5,4.5,48.5, descending order, page size 1000, JSON. The request has no
+station-code restriction and no fixed observation date; returned rows change.
+
+~~~sql
+CREATE LIGHTNING REST TABLE hydro_observations_raw FROM flood_hydro
+REQUEST (
+  endpoint 'https://hubeau.eaufrance.fr/api/v2/hydrometrie/observations_tr?bbox=-2.5,46.5,4.5,48.5&size=1000&sort=desc&format=json',
+  method 'GET',
+  http_encoding 'URLENCODED',
+  response_type 'JSON',
+  insecure_ssl 'false'
+)
+HEADER () BODY ()
+~~~
+
+~~~sql
+CREATE SCHEMASTORE VIEW v_hydro_observations WITH CONTAINER flood_analysis AS
+SELECT
+    obs.code_station,
+    obs.code_site,
+    obs.date_obs,
+    obs.grandeur_hydro,
+    obs.resultat_obs AS valeur_brute,
+    obs.resultat_obs / 1000.0 AS valeur_normalisee,
+    CASE
+        WHEN obs.grandeur_hydro = 'H' THEN 'm'
+        WHEN obs.grandeur_hydro = 'Q' THEN 'm3/s'
+        ELSE 'unknown'
+    END AS unite_normalisee,
+    obs.libelle_qualification_obs,
+    obs.libelle_statut
+FROM flood_hydro.hydro_observations_raw
+LATERAL VIEW explode(data) observations AS obs
+~~~
+
+**Daily history.** Public endpoint criteria: the same bounding box, QmnJ,
+2024-01-01 through 2024-12-31, page size 1000, JSON.
+
+~~~sql
+CREATE LIGHTNING REST TABLE hydro_history_raw FROM flood_hydro
+REQUEST (
+  endpoint 'https://hubeau.eaufrance.fr/api/v2/hydrometrie/obs_elab?bbox=-2.5,46.5,4.5,48.5&grandeur_hydro_elab=QmnJ&date_debut_obs_elab=2024-01-01&date_fin_obs_elab=2024-12-31&size=1000&format=json',
+  method 'GET',
+  http_encoding 'URLENCODED',
+  response_type 'JSON',
+  insecure_ssl 'false'
+)
+HEADER () BODY ()
+~~~
+
+~~~sql
+CREATE SCHEMASTORE VIEW v_hydro_history WITH CONTAINER flood_analysis AS
+SELECT
+    h.code_station,
+    h.code_site,
+    h.date_obs_elab,
+    h.grandeur_hydro_elab,
+    h.resultat_obs_elab AS valeur_brute,
+    h.resultat_obs_elab / 1000.0 AS debit_m3_s,
+    h.libelle_statut
+FROM flood_hydro.hydro_history_raw
+LATERAL VIEW explode(data) history AS h
+~~~
+
+REST registration fetches/infers a JSON response; it does not import an entire
+historical archive. Each view expands the response's data array into rows.
+A COUNT(*) on the raw response table is not the number of observations inside
+that array. Query the flattened view for observation/station rows.
+
+The shown registrations use a single requested response/page. Do not assume
+Zetaris follows the response's next link automatically. Inspect returned count,
+data and next and qualify actual coverage; complete pagination is not delivered.
+The bounding box is a rectangle, not a Loire-basin polygon. Recent/history rows
+can include stations outside the reference or other rivers; the view SQL does
+not join/filter them to the 103 reference stations. Match station/site identity,
+period and measurement meaning before comparing data.
+
+The /1000.0 operations reproduce the deployed views: H/Q get the displayed
+m/m3/s labels and historical values become debit_m3_s. Retain valeur_brute.
+Check the upstream variable/unit contract before adapting these views to other
+products. A negative H is not an automatic flood-risk classification.
+date_obs retains its source timestamp; date_obs_elab is a daily date, not an
+interchangeable observation instant.
+
+Public source: [Hub'Eau hydrometry](https://hubeau.eaufrance.fr/page/api-hydrometrie).
+No API authentication is specified for these public registrations. Leave any
+private instance authentication outside source definitions and version control.
+
+</details>
+
+#### Restore and register the Meteo-France CSV
+
+<details>
+<summary>Weather: exact archive, extraction, container path and SQL registration</summary>
+
+The public source is Meteo-France's
+[daily climate dataset](https://www.data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes).
+The archive covers department 44 and 1950-2024; the application imports a
+**2024 extraction only**. This is manual CSV preparation, not a weather API
+collector. See [data attribution](docs/data-sources.md) for licenses and provenance.
+
+From the repository root in Ubuntu WSL, with curl available, download only if
+the archive is absent:
+
+~~~bash
+mkdir -p data/meteo
+if [ ! -f data/meteo/Q_44_previous-1950-2024_RR-T-Vent.csv.gz ]; then
+  curl --fail --location --output data/meteo/Q_44_previous-1950-2024_RR-T-Vent.csv.gz 'https://meteofrance.s3.sbg.io.cloud.ovh.net/data/synchro_ftp/BASE/QUOT/Q_44_previous-1950-2024_RR-T-Vent.csv.gz'
+fi
+sha256sum data/meteo/Q_44_previous-1950-2024_RR-T-Vent.csv.gz
+~~~
+
+The operator's original archive hash was
+317d6d972e1a6287efac9842ee3b6b70b812ee181b1a43d8030b2ae4bf15d375.
+The public resource may be revised. If your hash differs, requalify the input
+instead of claiming byte-identical reproduction. Do not treat a partial/failed
+download as valid just because its output filename exists.
+
+Generate the 2024 CSV only if absent:
+
+~~~bash
+if [ ! -f data/meteo/meteo_precipitations_44_2024.csv ]; then
+  python3 -B data/meteo/extract_meteo_CSV.py
+fi
+sha256sum data/meteo/meteo_precipitations_44_2024.csv
+~~~
+
+The standard-library helper reads the semicolon-separated gzip, selects 2024
+rows with non-empty RR and writes a comma-separated CSV with header:
+NUM_POSTE,NOM_USUEL,LAT,LON,AAAAMMJJ,RR,QRR. It refuses to overwrite an existing
+output. Verify an existing CSV rather than silently replacing it.
+The original imported CSV hash was
+5fbffc154a7b04fbed8c696abbeb6bb2fc32dae8bb8f3d39c9239d8deb36ceaf.
+Its verified scope was 5490 rows, 15 station codes and dates 20240101..20241231.
+These counts are historical qualification evidence, not a guarantee about
+another input. The repository snapshot has only five weather rows.
+
+**Make the file readable by Zetaris, not just by your laptop.** Find your
+container names in Docker Desktop or docker ps. The inspected stack used
+zetaris-driver-1 and zetaris-api-1; substitute your own container names if
+different, but preserve the logical table/view names.
+
+Inspect the configured allowed root without dumping all environment variables:
+
+~~~bash
+docker exec zetaris-driver-1 printenv ZETARIS_LOCAL_FILE_SYTEM_ROOT_PATH
+docker exec zetaris-api-1 printenv ZETARIS_LOCAL_FILE_SYTEM_ROOT_PATH
+~~~
+
+The inspected value was /home/zetaris/customer-data/shared; SYTEM is the
+installed setting's actual spelling. Use your configured, persistent/shared
+allowed directory and make it visible to the required components. The commands
+below reproduce the inspected path; adapt the filesystem path consistently if
+your installation differs. NDP's virtual /file-store is a different location.
+
+Avoid overwriting an existing container file:
+
+~~~bash
+if docker exec zetaris-driver-1 test -e /home/zetaris/customer-data/shared/meteo_precipitations_44_2024.csv; then
+  echo 'Destination already exists: verify its checksum before reusing it; no copy performed.'
+else
+  docker cp data/meteo/meteo_precipitations_44_2024.csv zetaris-driver-1:/home/zetaris/customer-data/shared/meteo_precipitations_44_2024.csv
+fi
+docker exec --user zetaris zetaris-driver-1 test -r /home/zetaris/customer-data/shared/meteo_precipitations_44_2024.csv
+docker exec zetaris-driver-1 sha256sum /home/zetaris/customer-data/shared/meteo_precipitations_44_2024.csv
+~~~
+
+Expected: the read-permission check exits 0 and the container checksum matches
+your qualified host CSV. If the allowed directory is missing or not shared,
+resolve the platform storage configuration first; do not disable path checks.
+A file visible only inside WSL is not automatically visible to the driver.
+
+In Zetaris SQL Workspace, with flood_hydro already created, register only if
+the matching table is absent:
+
+~~~sql
+CREATE LIGHTNING FILESTORE TABLE meteo_precipitations_raw
+FROM flood_hydro FORMAT CSV
+OPTIONS (
+  path 'file:///home/zetaris/customer-data/shared/meteo_precipitations_44_2024.csv',
+  header 'true',
+  delimiter ',',
+  inferSchema 'true'
+)
+~~~
+
+The actual inferred schema was NUM_POSTE int, NOM_USUEL string, LAT double,
+LON double, AAAAMMJJ int, RR double, QRR int. AAAAMMJJ is an integer YYYYMMDD.
+RR accumulation/units and QRR quality meanings remain unverified in the
+application; do not invent thresholds or rainfall/discharge correlations.
+No separate weather view is required by the application.
+
+</details>
+
+#### Verify the data before starting the LIVE application
+
+Run these separately in SQL Workspace; CREATE success alone is insufficient:
+
+~~~sql
+DESCRIBE flood_analysis.v_hydro_stations
+~~~
+
+~~~sql
+SELECT * FROM flood_analysis.v_hydro_stations LIMIT 5
+~~~
+
+~~~sql
+DESCRIBE flood_analysis.v_hydro_observations
+~~~
+
+~~~sql
+SELECT * FROM flood_analysis.v_hydro_observations LIMIT 5
+~~~
+
+~~~sql
+DESCRIBE flood_analysis.v_hydro_history
+~~~
+
+~~~sql
+SELECT * FROM flood_analysis.v_hydro_history LIMIT 5
+~~~
+
+~~~sql
+DESCRIBE flood_hydro.meteo_precipitations_raw
+~~~
+
+~~~sql
+SELECT * FROM flood_hydro.meteo_precipitations_raw LIMIT 5
+~~~
+
+For the imported weather source, also qualify actual coverage:
+
+~~~sql
+SELECT COUNT(*) AS row_count,
+       COUNT(DISTINCT NUM_POSTE) AS station_count,
+       MIN(AAAAMMJJ) AS first_day,
+       MAX(AAAAMMJJ) AS last_day,
+       COUNT(RR) AS nonnull_rr
+FROM flood_hydro.meteo_precipitations_raw
+~~~
+
+Preserve the exact field names/types exposed above. Evaluate API/source counts
+from the results actually returned, not only from upstream totals or requested
+dates. Current hydrometry can move between reads. A successful empty response
+is not an automatic transport failure.
+
+The historical source's previously observed station codes did not match the
+reference by code_station, and Givry can be absent from a limited recent page.
+Do not manufacture matching observations. The weather scenario is the
+recommended first LIVE application check: it is the combined path previously
+demonstrated with the imported 2024 data.
+
+#### Configure the application's own private connection
+
+The judge does not need the author's getting-started checkout or private files.
+From this project's root, preserve an existing configuration or copy the empty
+template:
+
+~~~bash
+if [ ! -e .env.local ]; then
+  cp .env.example .env.local
+fi
+~~~
+
+Edit that private .env.local in your editor. Set your own ZETARIS_REST_URL
+(API base ending in /api/v1.0, reachable from WSL), ZETARIS_ORG_ID (the numeric
+organisation ID) and ZETARIS_API_KEY. The GUI URL is not the SQL API base.
+Create your own API key in Zetaris Management -> API Tokens; find the numeric
+ID under Management -> Organisation. Keep secrets out of shell history, Git,
+screenshots and logs. Onboarding needs suitable administrator permissions;
+the application should use a separately permitted read-only identity.
+
+The app requires an **absolute path to a file named .env.local**. It does not
+automatically consume .env, an arbitrarily named configuration file or the
+MODEL_* smoke settings. Only your own credentials are needed; none are shipped.
+
 If you do not already have a configured .env.local, copy .env.example to
 .env.local using your editor and fill only your own Zetaris URL, organisation
 and API key. Never overwrite an existing configured file. .env.example has
@@ -432,23 +868,57 @@ empty sensitive values and is intentionally versioned; real .env files are ignor
 Run with your actual Console URL, route and absolute private configuration path:
 
 ~~~bash
-python3 -B -m agent.demo --mode live --world-model memory --port 8766 --nightshift-base-url http://127.0.0.1:8088/v1 --route meterless/auto --zetaris-env-file /absolute/path/to/.env.local
+python3 -B -m agent.demo --mode live --world-model memory --port 8766 --nightshift-base-url http://127.0.0.1:8088/v1 --route meterless/auto --zetaris-env-file "$(pwd)/.env.local"
 ~~~
 
-For the existing owner environment, the verified private configuration path is
-/home/info/getting-started/.env.local. Open **http://127.0.0.1:8766** and choose
-the weather scenario for the verified 2024 CSV. Click **Run live analysis** to
-dispatch a real request; merely opening the UI performs no SQL or inference.
+The command uses the judge's own project .env.local through an absolute path.
+The original owner used /home/info/getting-started/.env.local; that historical
+path is not a dependency. Open **http://127.0.0.1:8766** and choose the weather
+scenario for your qualified 2024 CSV. Click **Run live analysis** to dispatch a
+real request; merely opening the UI performs no SQL or inference.
 
 The provider route is configurable, not a hardcoded NVIDIA model. The server
 reads the matching Windows Runtime token from its private proxy-token file.
-It does not expose it to the browser. The Console URL must be reachable from
-the chosen transport; 127.0.0.1 is not a portable address for another device.
+It does not expose it to the browser. In this shipped transport, use the
+Windows Runtime's actual loopback URL/port; 127.0.0.1 refers to Windows because
+the HTTP worker runs there. Remote Runtime URLs are not supported by this
+backend. This constraint is separate from the WSL-to-Zetaris API connection.
 
 The UI shows qualification, inference dispatch/response, model tool request,
 effective SQL, typed rows, result return, report and trace. The actual engine's
 task projection is shown when memory mode is selected. Race/Verify/Judge
 internals are not invented; use the Nightshift Console as complementary evidence.
+
+#### First LIVE run: expected result and troubleshooting
+
+The expected evidence is a real Nightshift dispatch, a structured run_sql
+request, a controlled Zetaris read, returned rows, a generated final response
+and a World Model task/event projection. Inspect the requested route and
+reported serving model, source receipts and uncertainty. Execution PASSED is
+not scientific validation or a successful JUDGE verdict. The interface exposes
+the actual sequence; it does not display fabricated lane outputs.
+
+| Symptom | Check / action |
+|---|---|
+| powershell.exe not found | Enable Windows/WSL interoperability and make the Windows executable available to WSL. A native Linux-only LIVE transport is not shipped. |
+| Missing /usr/bin/node or prepared bridge runtime | Install the required Linux toolchain, run the World Model restore commands and locked npm ci above, then test SAMPLE --world-model memory first. |
+| WINDOWS_LOOPBACK_REQUIRED | Use the Console's Windows loopback URL and actual port; remote hosts/IPs are rejected by this transport. |
+| Runtime token missing, invalid or unauthorized | Complete Nightshift setup under the same Windows account and check its private proxy-token file/route. Do not paste a token into code or use rt-local. |
+| SQL object not found | Check the exact database/table/container/view names and complete all registration/view steps; the application does not create them automatically. |
+| Invalid file path to access | Use the configured driver/API allowed root and a readable persistent/shared file, not merely the virtual NDP /file-store or your laptop path. |
+| Empty hydrometry result | Inspect the API page, station/site identity, geography and period. Do not invent observations or silently substitute SAMPLE. |
+| WAITING_HUMAN | Read the scoped incident and verify source/configuration; explicitly start a new run after correction. Durable automatic resume is not implemented. |
+| Model credit/rate-limit or tool-calling error | Check the configured Nightshift route/provider and available quota. Do not treat an error or undecided panel as a verified result. |
+
+LIVE can consume inference credits. A model load may take time; respect the
+bounded execution budget and reconcile an uncertain outcome before retrying.
+There is no public shared gateway or judge credential in Git.
+The third-party platforms still require their own installation/access, and
+the complete fresh-instance rebuild below has not been independently executed
+on a second machine. What was verified is the deployed metadata, the four
+current object reads, prior combined LIVE evidence and clean-clone SAMPLE/
+official-engine installation. The SQL/bootstrap instructions are a documented
+reconstruction recipe, not a newly executed deployment.
 
 ### Known delivery limits
 
@@ -1310,3 +1780,5 @@ The original smoke must not be repurposed or modified to implement them.
 - 2026-10-28: Clarified workflow 1.3 states/ADR links, execution identifiers, partial-versus-deferred capabilities and documentation navigation without changing implementation.
 
 - 2026-10-28: Clarified existing trace/report outputs versus deferred orchestrated audit, authorized delivery, dashboard integration and validated alerting capabilities.
+
+- 2026-10-28: Added exact deployed Hub Eau registrations/view SQL, weather retrieval/import, private configuration and LIVE prerequisites/checks; documented read-only verification and fresh-install/topology limits without changing implementation.
