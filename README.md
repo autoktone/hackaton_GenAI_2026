@@ -210,8 +210,17 @@ The validation reports, rather than the presence of a design, establish what ran
 | H-MEM and analytical learning | No H-MEM integration; operational memory is distinct from analytical knowledge | Retain hypotheses, reviewed conclusions, corrections, provenance, predicted/observed differences and validated lessons across analyses; no implied automatic model retraining |
 | Additional flood factors | Precipitation CSV and hydrometry sources with limited spatial/temporal compatibility | More qualified datasets for catchment slopes/topography, drainage and tributaries, soil saturation/infiltration, land use and impermeability, river geometry, structures and other relevant drivers |
 | Interactive presentation | Local question/result interface with returned data, execution steps and downloadable trace | Interactive map, spatial/layer selection, time-series views and scientifically validated indicators before any operational alert use |
+| Tracer / Audit component | In-memory operational events, visible execution trace, downloadable run JSON and optional World Model events/audits | A dedicated orchestrated component for durable logs, correlated traces, incident investigation, completeness checks, monitoring and retention |
+| Reporter / delivery integrations | Structured analysis result and local web presentation | Versioned report files, authorized notifications, controlled delivery through SFTP or other connectors, and machine-readable outputs consumed by external dashboards |
 | Retention and governance | Secrets excluded and no production identity system | Retention/purge policies, personal-data minimization and GDPR review appropriate to a future deployment |
 | Additional Meterless engines | World Model and Nightshift are the integrated components | H-MEM as above; Markovian for bounded long-analysis context and Scout Intent for intent/tool-policy evolution, subject to separate validation |
+
+Reporting and delivery actions would require explicit permissions, failure
+handling and audit evidence. External dashboards could consume versioned
+outputs to visualize indicators and support governance. Alert notifications
+would require separately validated rules; they are not delivered operational
+flood warnings. These are proposed extensions, not services implemented by
+the current Reporter or Tracer responsibilities.
 
 The separation of orchestrator, Analyzer, controlled tools, source catalog,
 provider transport and operational projection provides architectural extension
@@ -1299,3 +1308,5 @@ The original smoke must not be repurposed or modified to implement them.
 - 2026-10-28: Added clean-clone startup, expected SAMPLE outcomes and the targeted test command; grouped preserved historical milestones separately from current instructions.
 
 - 2026-10-28: Clarified workflow 1.3 states/ADR links, execution identifiers, partial-versus-deferred capabilities and documentation navigation without changing implementation.
+
+- 2026-10-28: Clarified existing trace/report outputs versus deferred orchestrated audit, authorized delivery, dashboard integration and validated alerting capabilities.
