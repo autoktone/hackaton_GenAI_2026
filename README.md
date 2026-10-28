@@ -265,9 +265,9 @@ coherence review, debugging, testing, documentation and presentation preparation
 This describes the development process, not extra autonomous agents running
 inside the delivered application.
 
-Development followed an incremental, documentation-guided approach: functions
-and components were first tested independently using explicitly selected
-standalone stubs, then connected through component integration tests and
+**Development methodology: incremental development guided by documentation
+and contracts.** Functions and components were first tested independently using
+explicitly selected standalone stubs, then connected through component integration tests and
 end-to-end scenarios, before validating the live path with real data and
 services. The interface was developed against the documented workflows,
 contracts and evidence requirements. The prototype demonstrates the value of
