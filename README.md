@@ -265,6 +265,17 @@ coherence review, debugging, testing, documentation and presentation preparation
 This describes the development process, not extra autonomous agents running
 inside the delivered application.
 
+Development followed an incremental, documentation-guided approach: functions
+and components were first tested independently using explicitly selected
+standalone stubs, then connected through component integration tests and
+end-to-end scenarios, before validating the live path with real data and
+services. The interface was developed against the documented workflows,
+contracts and evidence requirements. The prototype demonstrates the value of
+this approach, while substantial work remains before a production-ready
+product. Its separation of orchestration, agents, data access and rules
+provides a foundation for exploring other domains, each requiring its own
+data, constraints and validation.
+
 Original project work includes the application orchestrator, bounded Analyzer
 loop, controlled SQL adapters/catalog, Python-to-World-Model bridge and projection,
 application-specific tests, SAMPLE scenarios, web interface and project documentation.
@@ -1782,3 +1793,5 @@ The original smoke must not be repurposed or modified to implement them.
 - 2026-10-28: Clarified existing trace/report outputs versus deferred orchestrated audit, authorized delivery, dashboard integration and validated alerting capabilities.
 
 - 2026-10-28: Added exact deployed Hub Eau registrations/view SQL, weather retrieval/import, private configuration and LIVE prerequisites/checks; documented read-only verification and fresh-install/topology limits without changing implementation.
+
+- 2026-10-28: Added the approved incremental standalone-to-integration/E2E development methodology and its production/domain-validation boundaries.
