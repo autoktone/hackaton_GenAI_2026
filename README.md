@@ -259,8 +259,9 @@ According to the project owner, no application code was developed before the
 hackathon, and the application was not cloned or adapted from an existing
 application project. Its original design and implementation were created during
 the hackathon through collaboration between **one human and two AI assistants**.
-The human directed the work, supplied and configured data/services, made decisions
-and approved operations; the AI assistants supported design, implementation,
+The human managed the project and directed the work - supplied and configured
+infra/data/services, checked the texts and source codes, made decisions and
+approved operations; the AI assistants supported design, implementation,
 coherence review, debugging, testing, documentation and presentation preparation.
 This describes the development process, not extra autonomous agents running
 inside the delivered application.
@@ -1795,3 +1796,5 @@ The original smoke must not be repurposed or modified to implement them.
 - 2026-10-28: Added exact deployed Hub Eau registrations/view SQL, weather retrieval/import, private configuration and LIVE prerequisites/checks; documented read-only verification and fresh-install/topology limits without changing implementation.
 
 - 2026-10-28: Added the approved incremental standalone-to-integration/E2E development methodology and its production/domain-validation boundaries.
+
+- 2026-10-28: Clarified the human contribution: project management, infrastructure/data/service configuration, text/source-code review, decisions and operational approvals.
