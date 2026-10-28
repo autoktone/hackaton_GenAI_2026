@@ -3,6 +3,12 @@
 An exploratory Loire flood-analysis prototype for the Open Agent Hackathon.
 It is not an official flood-warning or scientifically validated forecasting service.
 
+**Reviewer navigation:** [Run SAMPLE](#sample-no-accounts-credentials-or-third-party-dependencies)
+| [Workflow and states](#application-workflow-and-versioned-definition)
+| [Execution data model](#execution-data-model-and-identifiers)
+| [Roadmap](#architecture-roadmap-and-deferred-capabilities)
+| [Project instructions](AGENTS.md)
+
 ## Submission snapshot and README clarification
 
 The original submitted application is preserved at
@@ -51,6 +57,60 @@ a successful JUDGE verdict to return its analysis.
 This README clarification records the configuration and observations already
 reported during the hackathon; it does not introduce a new implementation.
 
+## Application workflow and versioned definition
+
+The business-analysis path is associated with workflow **flood-analysis 1.3.0**.
+The current definition is [workflow JSON 1.3.0](workflows/flood-analysis/1.3.0.json),
+using schemaVersion 1. Its bounded SQL-retry/human-intervention policy is
+accepted in [ADR 0012](docs/decisions/0012-bounded-sql-retry-and-human-intervention.md).
+See also [ADR 0004: versioned workflows](docs/decisions/0004-versioned-workflows.md)
+and [ADR 0011: demand-driven analysis](docs/decisions/0011-demand-driven-analysis.md).
+
+The application orchestrator controls the outer workflow:
+
+1. **Qualify the request:** identify the run, record scope, authorized sources,
+   selected execution profile and limits.
+2. **Analyze:** invoke the Analyzer, which manages its bounded Nemotron/tool
+   loop. Data operations are requested as needed rather than collected
+   systematically before inference.
+3. **Control data access and incidents:** validate each permitted SQL read,
+   return correlated evidence and retry an eligible transient read failure
+   once. Stop for scoped human intervention when unresolved.
+4. **Report:** receive the structured analysis result and present the conclusion,
+   observations, provenance and interpretation limits.
+5. **Trace throughout:** record accepted operations, results and incidents.
+   With the official-engine profile selected, record operational information
+   through World Model and expose the application-owned task projection.
+
+The nominal steps are qualify-request -> analyze -> report. A run records its
+workflow identity/version; tasks enforce the supported step dependencies.
+World Model represents operational information; workflow decisions remain in
+application code.
+
+### States: result, run, task and attempt are different levels
+
+| Level | Implemented states |
+|---|---|
+| Application result / final UI outcome | PASSED, FAILED, WAITING_HUMAN |
+| Application-owned run projection | CREATED, RUNNING, SUCCEEDED, FAILED, OUTCOME_UNKNOWN, WAITING_HUMAN |
+| Task projection | RUNNING, WAITING_DATA, RETRY_PENDING, COMPLETED, FAILED, OUTCOME_UNKNOWN, WAITING_HUMAN |
+| SQL attempt | RUNNING, COMPLETED, FAILED, OUTCOME_UNKNOWN |
+| Trace status | IN_MEMORY, WORLD_MODEL_MEMORY, INCOMPLETE |
+
+These are application-defined statuses, not a claim that Meterless provides a
+native scheduler or this entire state machine. PASSED describes the outward
+execution result; SUCCEEDED describes a successful projected run; COMPLETED
+can describe a task. None establishes scientific validity.
+OUTCOME_UNKNOWN preserves uncertainty instead of asserting success or failure.
+WAITING_HUMAN prevents further dispatch and does not imply automatic resume.
+
+The JSON is a versioned procedural definition, not proof that all declared
+policies execute. The full generic JSON workflow interpreter, durable
+FINALIZING/terminal-publication lifecycle, cancellation and interactive approval
+handling remain design work. Partial completion is disabled in version 1.3.0.
+The broader design's COMPLETED/CANCELLED terminal-run states must not be
+confused with the implemented projection/result labels above.
+
 ## Two orchestration levels: the demonstrated agent loop
 
 1. **User to application orchestrator:** the application receives the question,
@@ -88,6 +148,101 @@ explicitly scripted tool choices/responses. It requires no services or credentia
 and does not execute World Model by default. The optional memory profile executes
 the actual official World Model. LIVE uses real Zetaris and Nightshift calls.
 A scripted SAMPLE response is never presented as live Nemotron inference.
+
+## Execution data model and identifiers
+
+The conceptual relationship is **user -> requests -> runs -> tasks -> attempts**.
+One request can have multiple runs; one run can have multiple tasks and events.
+An agent can serve many tasks/runs. A workflow step is a definition, a task is
+its concrete execution context, and an attempt is one execution try.
+
+| Identifier / reference | Role and current boundary |
+|---|---|
+| userId | Owns a request/run; identity is simulated in the prototype, not authenticated production account management. |
+| requestId | Identifies the logical user request independently of its execution. |
+| runId | Identifies one execution and scopes its state, events, decisions and results. |
+| workflowId, workflowVersion, workflowSha256 | Bind operational context to a named, versioned definition and its fingerprint; they do not establish a complete generic policy executor. |
+| stepId, taskId | Distinguish a defined workflow step from a concrete task within a run. |
+| operationId, attemptId | Keep one logical SQL operation stable across a bounded retry while identifying each physical attempt separately. A new attempt ID alone does not guarantee idempotence. |
+| agentId, actorId | Distinguish the responsible component from the actor recorded for an event/action. They are not authentication credentials. |
+| eventId | Identifies a recorded operational event for correlation and supported projection. |
+| evidenceId | Correlates returned data/provenance with the operation and analytical result; it is not a cryptographic source attestation. |
+| blockerId and scoped approval metadata | Part of the broader documented model. The delivered incident path returns a scoped human-intervention request; a complete multiple-blocker/approval lifecycle remains deferred. |
+
+The four information categories remain separate:
+
+- **Business data:** observations and source versions, accessed through Zetaris
+  or an explicitly selected real-data snapshot.
+- **Collection metadata/cache:** availability, coverage, freshness and reusable
+  results; the complete persistent catalog/cache service is future work.
+- **Operational state:** runs, tasks, attempts, events, incidents and evidence;
+  the implemented optional World Model profile is memory-only.
+- **Capitalized knowledge:** hypotheses, conclusions, corrections and lessons
+  across analyses; H-MEM integration is a future option.
+
+Shared workers or data do not imply shared run ownership. Isolation of
+overlapping runs has been tested at the application/engine layer, including
+requests from the same user. The web demonstration deliberately admits one
+active analysis at a time; it is not a production multi-user service.
+
+See the [operational model](docs/architecture/execution-model.md),
+[input and data-validity contract](docs/architecture/analysis-input-and-data-validity.md)
+and [isolation decision](docs/decisions/0002-execution-isolation.md).
+These describe logical contracts, not a deployed relational schema or complete
+authorization infrastructure.
+
+## Architecture roadmap and deferred capabilities
+
+The following directions make the intended extension boundaries visible.
+They are **not additional delivered features or post-submission development**.
+Some have detailed designs/ADRs; others are owner-proposed future directions.
+The validation reports, rather than the presence of a design, establish what ran.
+
+| Area | Delivered baseline | Designed or proposed continuation |
+|---|---|---|
+| Full incident recovery | One bounded read retry, explicit uncertainty and scoped human intervention; memory-only state | Durable events/audits, restart reconstruction, reconciliation of external effects, reliable resume, stable operation identity and crash-safe finalization |
+| Complex incident paths | Tested transient/persistent SQL failures and blocked dispatch after intervention | Multiple simultaneous blockers, independent resolution, scoped human approvals, cancellation, partial-result policy, timeout/completion races and late/conflicting events |
+| Simultaneous requests | Distinct user/request/run/task identities and overlapping-run isolation tests; one active web analysis | Concurrent requests from the same or different users, worker coordination, per-run limits, shared collection deduplication and explicit result ownership |
+| Accounts and access rights | Fictional user identity, controlled tools, admitted read-only SQL and authorized sources | Authentication, roles, per-user permissions, tenant isolation and operator authorization |
+| Freshness and selective acquisition | Verified source catalog, actual controlled reads and explicit coverage caveats | Persistent availability/quality metadata, fresh-data reuse, collection of missing periods only, shared in-flight collection tracking and cache invalidation |
+| Historical execution and backtesting | Deterministic SAMPLE replay of captured observations and scripted inference | Historical as-of execution without future-data leakage, publication/revision tracking, pinned datasets/methods and repeatable backtests |
+| Prediction and performance evaluation | Exploratory evidence-linked explanations and limited deterministic hydrometry summaries; no validated forecast | An internal predictive model, statistical/lag analysis, calibration, horizon-specific predicted-versus-observed evaluation and versioned evaluation records |
+| H-MEM and analytical learning | No H-MEM integration; operational memory is distinct from analytical knowledge | Retain hypotheses, reviewed conclusions, corrections, provenance, predicted/observed differences and validated lessons across analyses; no implied automatic model retraining |
+| Additional flood factors | Precipitation CSV and hydrometry sources with limited spatial/temporal compatibility | More qualified datasets for catchment slopes/topography, drainage and tributaries, soil saturation/infiltration, land use and impermeability, river geometry, structures and other relevant drivers |
+| Interactive presentation | Local question/result interface with returned data, execution steps and downloadable trace | Interactive map, spatial/layer selection, time-series views and scientifically validated indicators before any operational alert use |
+| Retention and governance | Secrets excluded and no production identity system | Retention/purge policies, personal-data minimization and GDPR review appropriate to a future deployment |
+| Additional Meterless engines | World Model and Nightshift are the integrated components | H-MEM as above; Markovian for bounded long-analysis context and Scout Intent for intent/tool-policy evolution, subject to separate validation |
+
+The separation of orchestrator, Analyzer, controlled tools, source catalog,
+provider transport and operational projection provides architectural extension
+points. Adapting the approach to another domain would still require qualified
+data, domain-specific tools/rules, updated permissions and meaningful tests.
+A general-purpose plugin framework or arbitrary-domain validation is not claimed.
+
+### Documentation map for reviewers and future development
+
+- [AGENTS.md](AGENTS.md): permanent project instructions, responsibilities,
+  constraints and navigation to the technical documentation.
+- [Project status](docs/PROJECT_STATUS.md): dated implementation/evidence
+  checkpoints and remaining work.
+- [ADR register](docs/decisions/README.md): decisions and their status;
+  [recovery](docs/decisions/0007-recovery-idempotency-and-concurrency.md),
+  [tasks/blockers](docs/decisions/0003-tasks-attempts-and-blockers.md),
+  [data freshness](docs/decisions/0006-data-freshness-and-selective-collection.md)
+  and [scoped approval](docs/decisions/0008-human-approval-and-authorization.md)
+  provide the broader design.
+- [Workflow/Planner contract](docs/architecture/workflow-and-planner.md),
+  [execution model](docs/architecture/execution-model.md) and
+  [input/data-validity contract](docs/architecture/analysis-input-and-data-validity.md):
+  detailed contracts and their implementation boundaries.
+- [Validation register](docs/validation/README.md): observed test results,
+  anomalies and evidence; [report 0018](docs/validation/reports/0018-workflow-13-and-live-weather-analysis.md)
+  records the combined LIVE path and
+  [report 0019](docs/validation/reports/0019-release-readiness.md) the clean setup.
+
+Use the current README instructions for judging. Older dated checkpoints and
+design documents retain their context; an accepted decision or described
+capability is not, by itself, proof of implementation or successful execution.
 
 ## Original work, collaboration and reused third-party material
 
@@ -1142,3 +1297,5 @@ The original smoke must not be repurposed or modified to implement them.
 ## README clarification history
 
 - 2026-10-28: Added clean-clone startup, expected SAMPLE outcomes and the targeted test command; grouped preserved historical milestones separately from current instructions.
+
+- 2026-10-28: Clarified workflow 1.3 states/ADR links, execution identifiers, partial-versus-deferred capabilities and documentation navigation without changing implementation.
