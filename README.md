@@ -3,6 +3,96 @@
 An exploratory Loire flood-analysis prototype for the Open Agent Hackathon.
 It is not an official flood-warning or scientifically validated forecasting service.
 
+## Submission snapshot and README clarification
+
+The original submitted application is preserved at
+[`hackathon-submission-2026`](https://github.com/autoktone/hackaton_GenAI_2026/tree/hackathon-submission-2026),
+commit [9821503](https://github.com/autoktone/hackaton_GenAI_2026/commit/9821503e5abfb17b2fc40f4f6d96501c6599ea06).
+This subsequent README-only clarification explains that existing submission.
+It adds no application features and changes no code, tests, data or dependencies.
+
+## What the sponsor technologies contribute
+
+| Technology | Role in this application | Evidence and boundary |
+|---|---|---|
+| **Zetaris** | Makes the authorized hydrometry views and imported weather CSV queryable through one controlled REST SQL interface. Nemotron can request the data it needs through the backend's restricted run_sql tool. | Actual application reads were executed against Zetaris. Hub'Eau view coverage is partial; weather is an imported 2024 CSV, not a live Meteo-France API collector. |
+| **Meterless Nightshift Runtime** | Provides the Analyzer's OpenAI-compatible inference endpoint and configurable routing. The backend sends the question, source catalog, permitted tools and previous tool results. | The recorded LIVE application run made two real Nightshift requests. The route was meterless/auto; the underlying model is configured in the Runtime, not hardcoded in application logic. |
+| **NVIDIA Nemotron** | Within the Analyzer, selects an authorized data query through structured tool calling, receives its result and generates an explanation with stated limits. | Both responses in the recorded weather run reported nvidia/nemotron-3.5-lightning-30b-a3b. Generated text is not scientifically validated, and no positive Nightshift JUDGE verdict is claimed. |
+| **Meterless World Model** | The actual official reference implementation records operational events/audits and supports the application-owned task/state projection. Python calls it through a small TypeScript bridge. | The recorded LIVE weather run produced 16 matching native events/audits. It is memory-only; World Model does not replace our orchestrator, grant permissions or provide durable recovery. |
+
+The combined LIVE result is documented in
+[report 0018](docs/validation/reports/0018-workflow-13-and-live-weather-analysis.md).
+[Report 0019](docs/validation/reports/0019-release-readiness.md) separately records
+clean-clone SAMPLE checks and actual official-engine installation/execution.
+These are distinct tests, not claims that every mode executes every sponsor service.
+
+## Two orchestration levels: the demonstrated agent loop
+
+1. **User to application orchestrator:** the application receives the question,
+   creates a scoped run and invokes the Analyzer with the authorized source
+   catalog, context and execution limits.
+2. **Analyzer to Nightshift/Nemotron:** the Analyzer submits the question and
+   available tool descriptions. Nemotron requests a structured run_sql call;
+   data acquisition is not a mandatory step completed before inference.
+3. **Analyzer to application orchestrator:** the requested data operation goes
+   through backend controls. Nemotron cannot change the global workflow,
+   authorize itself or access arbitrary tables.
+4. **Application orchestrator to Zetaris:** the backend validates the admitted
+   read-only SQL, executes it within limits and records its outcome and
+   provenance. A temporary SQL failure permits one bounded retry; an unresolved
+   incident stops for human intervention.
+5. **Tool result back to Nemotron:** the result returns through the Analyzer.
+   The bounded loop can perform an additional authorized read when needed.
+   Nemotron then generates its final response using the returned observations.
+6. **Analyzer back to the application orchestrator:** the Analyzer returns a
+   structured result with the answer, datasets, provenance, uncertainty,
+   validation status and traces.
+7. **Application orchestrator to interface and audit:** the application presents
+   the conclusion separately from the evidence and scientific-validation
+   status. With the official-engine profile selected, operational events and
+   the task projection also go through World Model.
+
+In the demonstrated LIVE weather run, this loop contained two model requests,
+one actual Zetaris SQL read and five returned records. That query sample does
+not represent the full source's coverage. No rainfall/discharge correlation,
+validated flood prediction or automatic safety decision is claimed.
+
+**SAMPLE and LIVE disclosure:** portable SAMPLE uses the same application
+orchestrator, Analyzer and tool contracts with captured real observations and
+explicitly scripted tool choices/responses. It requires no services or credentials
+and does not execute World Model by default. The optional memory profile executes
+the actual official World Model. LIVE uses real Zetaris and Nightshift calls.
+A scripted SAMPLE response is never presented as live Nemotron inference.
+
+## Original work, collaboration and reused third-party material
+
+According to the project owner, no application code was developed before the
+hackathon, and the application was not cloned or adapted from an existing
+application project. Its original design and implementation were created during
+the hackathon through collaboration between **one human and two AI assistants**.
+The human directed the work, supplied and configured data/services, made decisions
+and approved operations; the AI assistants supported design, implementation,
+coherence review, debugging, testing, documentation and presentation preparation.
+This describes the development process, not extra autonomous agents running
+inside the delivered application.
+
+Original project work includes the application orchestrator, bounded Analyzer
+loop, controlled SQL adapters/catalog, Python-to-World-Model bridge and projection,
+application-specific tests, SAMPLE scenarios, web interface and project documentation.
+
+**Pre-existing third-party technologies and references were nevertheless reused:**
+Zetaris, Nightshift, NVIDIA Nemotron, the unchanged official Meterless World Model
+reference, its locked tooling dependencies, public datasets, onboarding material
+and the Participant Setup Guide's original smoke script. These are acknowledged
+integrations and reference material, not technologies authored by this team.
+The originality statement above concerns our application, not ownership or
+independent invention of these components or of general architectural concepts.
+
+The original application code is MIT-licensed; third-party code, documents and
+datasets retain their own terms. See [LICENSE](LICENSE), the
+[World Model provenance](docs/references/meterless/world-model/provenance.json)
+and [data attribution](docs/data-sources.md).
+
 ## Release verification - 2026-10-28
 
 A clean local Git clone passed the 15 targeted tests and the credential-free
@@ -962,3 +1052,5 @@ The original smoke must not be repurposed or modified to implement them.
 - 2026-10-28: Added clean-clone release evidence, official-engine installation results, data credits and the short-checkout requirement.
 
 - 2026-10-28: Linked the project MIT license with copyright Autoktone and preserved third-party licensing boundaries for GitHub publication.
+
+- 2026-10-28: Clarified sponsor contributions, the demonstrated bounded agent loop, original application authorship and reused references in a post-submission README-only commit; preserved the original tagged snapshot.
