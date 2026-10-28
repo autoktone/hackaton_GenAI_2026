@@ -26,6 +26,31 @@ The combined LIVE result is documented in
 clean-clone SAMPLE checks and actual official-engine installation/execution.
 These are distinct tests, not claims that every mode executes every sponsor service.
 
+### Nightshift lane configuration used during the hackathon
+
+The operator configured three Nightshift lanes:
+
+| Lane | Configured model | Purpose |
+|---|---|---|
+| RACE | nvidia/nemotron-3.5-lightning-30b-a3b | Candidate generation |
+| VERIFY | nvidia/nemotron-3.5-lightning-30b-a3b | Verification stage |
+| JUDGE | nvidia/nemotron-3-ultra-550b-a55b | Candidate assessment |
+
+This is the operator-reported Runtime configuration, not three application-owned
+agents. The application requests the configurable meterless/auto route;
+Nightshift manages its internal lanes. The recorded LIVE application responses
+reported the Lightning model.
+
+Configuration does not establish successful verification. In the separately
+reported job job_mvqdodfh02, two candidates were generated, but the JUDGE panel
+returned unparseable, scored zero candidates and abstained on both.
+No positive verification verdict is claimed. The application therefore
+distinguishes a generated response from a verified result and does not require
+a successful JUDGE verdict to return its analysis.
+
+This README clarification records the configuration and observations already
+reported during the hackathon; it does not introduce a new implementation.
+
 ## Two orchestration levels: the demonstrated agent loop
 
 1. **User to application orchestrator:** the application receives the question,
@@ -1054,3 +1079,5 @@ The original smoke must not be repurposed or modified to implement them.
 - 2026-10-28: Linked the project MIT license with copyright Autoktone and preserved third-party licensing boundaries for GitHub publication.
 
 - 2026-10-28: Clarified sponsor contributions, the demonstrated bounded agent loop, original application authorship and reused references in a post-submission README-only commit; preserved the original tagged snapshot.
+
+- 2026-10-28: Documented the operator-reported RACE/VERIFY/JUDGE models and retained the distinction between generated responses and successful verification.
