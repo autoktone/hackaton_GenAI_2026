@@ -147,11 +147,15 @@ for the public hydrometry/weather source licenses and processing provenance.
 
 ### SAMPLE: no accounts, credentials or third-party dependencies
 
-From the project root, with Python installed:
+From a clean setup, with Git and Python installed:
 
 ~~~bash
+git clone https://github.com/autoktone/hackaton_GenAI_2026.git flood-risk-intelligence
+cd flood-risk-intelligence
 python3 -B -m agent.demo
 ~~~
+
+If you already cloned the repository, run python3 -B -m agent.demo from its root.
 
 Open **http://127.0.0.1:8765**. No pip install, .env file, Node, vendor directory,
 Zetaris installation or Nightshift access is needed. Python's standard sqlite3
@@ -170,6 +174,47 @@ installation below, then run:
 ~~~bash
 python3 -B -m agent.demo --world-model memory
 ~~~
+
+### What judges should observe
+
+After starting the server, open http://127.0.0.1:8765 and choose a scenario.
+The question and **Analysis result** appear before the returned data and
+execution trace.
+
+| SAMPLE scenario | Expected execution outcome | Evidence to inspect |
+|---|---|---|
+| Weather | PASSED with a scripted final response | Five captured BLAIN weather records, source receipt and ordered application events |
+| Hydrometry | PASSED with a scripted final response | Captured station/observation results, source receipts and ordered application events |
+| Recovered incident | PASSED after one retry | Failed first SQL attempt, retry event, successful second attempt and final response |
+| Human intervention | WAITING_HUMAN with no final analytical conclusion | Two unsuccessful SQL attempts, scoped intervention reason and a stopped run; no extra inference to manage the incident |
+
+**Execution: PASSED** confirms completion of the selected workflow, not the
+truth of its interpretation. **Scientific interpretation: NOT VALIDATED**
+remains explicit. SAMPLE inference is scripted, never a new live Nemotron
+response. The portable profile's badge states that World Model is not executed;
+select the optional memory profile below to exercise the official engine.
+
+The human-intervention scenario does not provide interactive approval or
+durable resume. After checking the incident, an operator may explicitly start
+a new run. Returned data, traces and downloadable run JSON remain available
+for inspection.
+
+### Quick credential-free verification
+
+From the repository root, the dedicated SAMPLE suite is:
+
+~~~bash
+python3 -S -B -m unittest discover -s tests/unit -p test_demo.py -q
+~~~
+
+Expected result: **15 tests, OK**. This suite uses explicit substitutes for
+live transports and needs no accounts, credentials, Node or third-party
+packages. Previous execution evidence is in
+[report 0019](docs/validation/reports/0019-release-readiness.md).
+
+Use this targeted command rather than blanket test discovery: the original
+guide smoke performs live checks on import, and its legacy adaptation tests
+are not a general offline test entry point.
 
 ### Optional official World Model installation - vendor is not in Git
 
@@ -308,7 +353,17 @@ explicit topology. Never mix an API key, model ID and base URL from different ro
 
 [Project instructions](AGENTS.md), [current status](docs/PROJECT_STATUS.md) and
 [validation register](docs/validation/README.md) provide deeper evidence.
-Earlier milestones remain below as historical records.
+The current judging/setup instructions end here. Earlier material is retained
+below solely as a development record.
+
+<details>
+<summary>Historical development notes - not current setup instructions</summary>
+
+The following milestones preserve earlier decisions, commands and results.
+Statements such as "pending" or "not implemented", and superseded smoke
+commands, describe their historical stage. Use the current judging/demo
+instructions above for setup and usage.
+
 
 ## Current verified application checkpoint
 
@@ -1081,3 +1136,9 @@ The original smoke must not be repurposed or modified to implement them.
 - 2026-10-28: Clarified sponsor contributions, the demonstrated bounded agent loop, original application authorship and reused references in a post-submission README-only commit; preserved the original tagged snapshot.
 
 - 2026-10-28: Documented the operator-reported RACE/VERIFY/JUDGE models and retained the distinction between generated responses and successful verification.
+
+</details>
+
+## README clarification history
+
+- 2026-10-28: Added clean-clone startup, expected SAMPLE outcomes and the targeted test command; grouped preserved historical milestones separately from current instructions.
