@@ -81,3 +81,14 @@ smoke_test - Copy.py
 # Optional raw archive is reproducible; URL and checksum remain in docs/data-sources.md.
 /data/meteo/Q_44_previous-1950-2024_RR-T-Vent.csv.gz
 # History: 2026-10-28: Excluded the unused raw weather archive without deleting local data; retained recovery provenance.
+
+# Windows Mark-of-the-Web metadata exported as files; not application inputs.
+*:Zone.Identifier
+*.Zone.Identifier
+Zone.Identifier
+*:Zone.Identifier:$DATA
+*.Zone.Identifier:$DATA
+*:zone.identifier
+*.zone.identifier
+zone.identifier
+# History: 2026-10-28: Stopped tracking Windows download-zone metadata to avoid unnecessary artifacts and Windows checkout errors; preserved all local files.
